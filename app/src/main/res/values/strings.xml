@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">hikelowna</string>
     <string name="loginText">Login</string>
-    <string name="registerText">Register</string>
+    <string name="registerText"><u>Register</u></string>
     <string name="passwordText">Password</string>
     <string name="usernameText">Username</string>
     <string name="rememberText">Remember me</string>
+    <string name="welcomeText">Welcome back! Welcome back! Welcome back! Welcome back! Welcome back!</string>
     <string name="title_activity_landing_page">LandingPage</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_map">Map</string>
+    <string name="title_profile">Profile</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

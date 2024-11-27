@@ -2,8 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#808080</color>
     <color name="maincolor">#EB810A</color>
     <color name="tomato">#EB5857</color>
+    <color name="lightslategray">#838FB2</color>
+    <color name="darkseagreen">#B3CF98</color>
     <color name="palevioletred">#c34f83</color>
     <color name="darkslateblue">#825591</color>
     <color name="steelblue">#46547e</color>
