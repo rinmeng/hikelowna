@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "427570954985",
+    "firebase_url": "https://hikelowna-b6377-default-rtdb.firebaseio.com",
+    "project_id": "hikelowna-b6377",
+    "storage_bucket": "hikelowna-b6377.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427570954985:android:c7b3b95b77478b2e12a678",
+        "android_client_info": {
+          "package_name": "com.example.hikelowna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvOkYvvEdXNC9nfJ84qOLD2kkWQKQapeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
