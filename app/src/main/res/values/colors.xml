@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="maincolor">#EB810A</color>
+    <color name="tomato">#EB5857</color>
+    <color name="palevioletred">#c34f83</color>
+    <color name="darkslateblue">#825591</color>
+    <color name="steelblue">#46547e</color>
+    <color name="darkslategrey">#2f4858</color>
+    <color name="darkslategreen">#005247</color>
+    <color name="gainsboro">#dfe0df</color>
 </resources>
