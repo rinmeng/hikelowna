@@ -7,6 +7,13 @@
     android:background="@color/gainsboro"
     tools:context=".ui.MapFragment">
 
+    <!-- Google Map Fragment -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <!-- Banner View -->
     <View
         android:id="@+id/banner"
@@ -18,20 +25,52 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- TextView positioned on top of the banner -->
-    <TextView
-        android:id="@+id/welcomeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/nexaheavy"
-        android:paddingHorizontal="20dp"
-        android:text="@string/title_map"
-        android:textAlignment="center"
-        android:textColor="@color/darkslategrey"
-        android:textSize="30sp"
-        android:textStyle="bold"
+
+    <!-- Zoom In Button -->
+    <Button
+        android:id="@+id/zoomOutButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="-"
+        android:textSize="25sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/banner"
-        android:layout_marginBottom="-60dp"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Zoom Out Button -->
+    <Button
+        android:id="@+id/zoomInButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="+"
+        android:textSize="25sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/zoomOutButton" />
+
+    <SearchView
+        android:id="@+id/searcher"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textAlignment="center"
+        android:queryHint="Search for a trail..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/banner"
+        app:layout_constraintTop_toTopOf="@+id/map" />
+
+    <ListView
+        android:id="@+id/suggestionsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searcher"
+        app:layout_constraintStart_toStartOf="@+id/searcher"
+        app:layout_constraintTop_toBottomOf="@+id/banner"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
