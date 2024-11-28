@@ -1,16 +1,8 @@
 package com.example.hikelowna.ui;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -39,9 +31,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -235,6 +232,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapMessage.setVisibility(View.GONE);
         return rootView; // Return the created view
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Ensure the suggestionsListView is hidden whenever the view is created
+        suggestionsListView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Ensure the suggestionsListView is hidden whenever the fragment resumes
+        if (suggestionsListView != null) {
+            suggestionsListView.setVisibility(View.GONE);
+        }
     }
 
     // Hide the keyboard programmatically
