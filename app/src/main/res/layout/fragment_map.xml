@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Vertical guideline (83% width) -->
+    <!-- Vertical guideline -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalGuideline"
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.83" />
 
-    <!-- Horizontal guideline (90% height) -->
+    <!-- Horizontal guideline -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontalGuideline"
         android:layout_width="wrap_content"
