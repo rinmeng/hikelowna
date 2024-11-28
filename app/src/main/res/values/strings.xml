@@ -14,5 +14,6 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="google_maps_api_key">AIzaSyB5pETZIWcmksqfY20ZfTP27BKOL7bWFjk</string>
     <string name="mapMessage">Initializing Map...</string>
+    <string name="button_size_map">20dp</string>
 
 </resources>

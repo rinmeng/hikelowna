@@ -1,15 +1,24 @@
 package com.example.hikelowna.ui;
 
+
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -18,7 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.hikelowna.R;
@@ -32,68 +41,49 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
-
-// Retrofit imports
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-
-// Gson imports for JSON parsing
-import com.google.gson.annotations.SerializedName;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap map;
-    private Button zoomInButton, zoomOutButton;
+    private GoogleMap map; // The Google Map object to manipulate the map
+    private Button zoomInButton, zoomOutButton; // Buttons for zooming in and out
 
-    TextView mapMessage;
-    ListView suggestionsListView;
-    LatLng defaultLocation;
-    float defaultZoom;
-    float searchZoom;
+    TextView mapMessage; // TextView for displaying messages on the map fragment
+    ListView suggestionsListView; // ListView to display search suggestions
+    LatLng defaultLocation; // Default location to focus the map (Kelowna coordinates)
+    float defaultZoom; // Default zoom level for the map
+    float searchZoom; // Zoom level when focusing on a search result
 
-    SearchView searcher;
-    List<String> searchResults;
+    SearchView searcher; // SearchView widget for entering trail queries
+    List<String> searchResults; // List to store search results
 
-    private List<Trail> trails;
-    private ArrayAdapter<Trail> adapter;
+    private List<Trail> trails; // List of available trails
+    private ArrayAdapter<Trail> adapter; // Adapter for displaying trails in the ListView
 
-    // Add this method to initialize trails
+    // Initialize the list of trails
     private void initializeTrails() {
         trails = new ArrayList<>();
-        trails.add(new Trail("Knox Mountain", "Moderate", 3.8f));
-        trails.add(new Trail("Mission Creek Greenway", "Easy", 16.5f));
-        trails.add(new Trail("Mount Boucherie", "Difficult", 6.0f));
-        trails.add(new Trail("Paul's Tomb", "Easy", 4.8f));
-        trails.add(new Trail("Dilworth Mountain", "Moderate", 3.2f));
-        trails.add(new Trail("Rose Valley Regional Park", "Moderate", 5.0f));
-        trails.add(new Trail("Myra Canyon", "Easy", 12.0f));
-        trails.add(new Trail("Crawford Falls", "Moderate", 1.5f));
-        trails.add(new Trail("Apex Trail", "Difficult", 5.2f));
-        trails.add(new Trail("Myra Canyon Trestles Loop", "Easy", 24.0f));
-        trails.add(new Trail("Myra Canyon West Trail", "Moderate", 8.0f));
-        trails.add(new Trail("Myra Canyon East Trail", "Moderate", 7.5f));
-        trails.add(new Trail("Myra-Bellevue Angel Springs Trail", "Moderate", 6.4f));
-        trails.add(new Trail("Myra Canyon KVR South", "Easy", 15.0f));
-        trails.add(new Trail("Myra Canyon Trestle Valley Trail", "Moderate", 4.2f));
+        logSavedTrails();
 
+        // Adding sample trails with dummy data
+        trails.add(new Trail("Apex Trail", "", 0.0f, 0.0f, 0.0f));
+        trails.add(new Trail("Paul's Tomb Trail", "", 0.0f, 0.0f, 0.0f));
+        trails.add(new Trail("Gordon Trail", "", 0.0f, 0.0f, 0.0f));
+        trails.add(new Trail("Saddle Trail", "", 0.0f, 0.0f, 0.0f));
+        trails.add(new Trail("Glenmore Highlands Trail", "", 0.0f, 0.0f, 0.0f));
+        trails.add(new Trail("Pine Trail", "", 0.0f, 0.0f, 0.0f));
+
+        // Sort trails alphabetically for better usability
         Collections.sort(trails);
+
+        // Bind the trails to a ListView using an ArrayAdapter
         adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
         suggestionsListView.setAdapter(adapter);
     }
-
 
     public MapFragment() {
         // Required empty public constructor
@@ -106,287 +96,311 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
-        defaultLocation = new LatLng(49.8880, -119.4960);
-        defaultZoom = 16.0f;
-        searchZoom = 17.0f;
+        map = googleMap; // Initialize the Google Map
+        defaultLocation = new LatLng(49.8880, -119.4960); // Set the default location (Kelowna)
+        defaultZoom = 16.0f; // Set the default zoom level
+        searchZoom = 17.0f; // Set the zoom level for search results
 
-        // Default: Draw a marker for Kelowna
+        // Center the map on the default location with a lower zoom level
         moveCameraTo(defaultLocation, 12);
 
-        setZoomControls();
+        setZoomControls(); // Set up the zoom controls for the map
 
+        // Handle marker click events
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            // further on provide details about the hike
             @Override
             public boolean onMarkerClick(Marker marker) {
-                marker.showInfoWindow();
+                // Move camera to the clicked marker with a zoom level for search results
+                moveCameraTo(marker.getPosition(), searchZoom);
+                showMarkerPopup(marker); // Show a popup dialog with marker details
+                marker.showInfoWindow(); // Show the marker's info window
 
-                return true; // Return true to consume the event and prevent default behavior
+                return true; // Consume the event to prevent default behavior
             }
         });
     }
+
+    // Show a popup with details about the selected marker
+    private void showMarkerPopup(Marker marker) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View popupView = inflater.inflate(R.layout.marker_popup, null);
+
+        // Get references to the UI elements in the popup
+        TextView titleView = popupView.findViewById(R.id.popupTitle);
+        TextView descriptionView = popupView.findViewById(R.id.popupDescription);
+        Button closeButton = popupView.findViewById(R.id.closeButton);
+
+        // Set marker information in the popup
+        titleView.setText(marker.getTitle());
+        descriptionView.setText(marker.getSnippet());
+
+        // Attach the custom view to the dialog
+        builder.setView(popupView);
+        AlertDialog dialog = builder.create();
+
+        // Close button action to dismiss the popup
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        // Show the dialog
+        dialog.show();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
+        // Bind UI components to variables
         zoomInButton = rootView.findViewById(R.id.zoomInButton);
         zoomOutButton = rootView.findViewById(R.id.zoomOutButton);
         searcher = rootView.findViewById(R.id.searcher);
         searchResults = new ArrayList<>();
         suggestionsListView = rootView.findViewById(R.id.suggestionsListView);
-        mapMessage= rootView.findViewById(R.id.mapMessage);
-        initializeTrails();
+        mapMessage = rootView.findViewById(R.id.mapMessage);
 
+        initializeTrails(); // Set up the trail list and adapter
 
-        searcher.setGravity(Gravity.CENTER);
+        suggestionsListView.setVisibility(View.GONE); // Hide suggestions list by default
 
-        // Show list when search icon is clicked
+        searcher.setGravity(Gravity.CENTER); // Center-align the text in the search bar
+
+        // Set up event handlers for the SearchView
         searcher.setOnSearchClickListener(v -> {
-            // Show the suggestions list
+            // Show the suggestions list when the search bar is expanded
             suggestionsListView.setVisibility(View.VISIBLE);
-            // Trigger the filter to show all items
-            adapter.getFilter().filter("");
+            adapter.getFilter().filter(""); // Reset the filter to show all trails
             searcher.setBackgroundColor(requireContext().getResources().getColor(R.color.gainsboro, requireContext().getTheme()));
         });
 
-        // When search bar is closed, close the list too
         searcher.setOnCloseListener(() -> {
-            // Hide the suggestions list
+            // Hide the suggestions list when the search bar is closed
             suggestionsListView.setVisibility(View.GONE);
             searcher.setBackgroundColor(requireContext().getResources().getColor(android.R.color.transparent, requireContext().getTheme()));
-            return false;
+            return false; // Let the system handle additional close behavior
         });
 
-
+        // Handle changes in the SearchView text
         searcher.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return true;
+                return true; // Search is already handled by text change
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    adapter.getFilter().filter(""); // Show all trails
+                    // Show all trails if no search query is entered
+                    adapter.getFilter().filter("");
+                    suggestionsListView.setVisibility(View.VISIBLE);
                 } else {
-                    adapter.getFilter().filter(newText); // Filter trails based on input
+                    // Filter trails based on the query
+                    adapter.getFilter().filter(newText, count -> {
+                        // Show/hide suggestions based on the number of matches
+                        suggestionsListView.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+                    });
                 }
-                suggestionsListView.setVisibility(View.VISIBLE);
                 return true;
             }
         });
 
-        // Add ListView item click listener
         suggestionsListView.setOnItemClickListener((parent, view, position, id) -> {
+            // Get the selected trail
             Trail selectedTrail = (Trail) parent.getItemAtPosition(position);
+
+            // Set the search bar text to the selected trail's name without submitting
             searcher.setQuery(selectedTrail.getName(), false);
+
+            // Start a search for the selected trail
             searchAddressByName(selectedTrail, true);
-            hideKeyboard();
-            searcher.setBackgroundColor(requireContext().getResources().getColor(android.R.color.transparent, requireContext().getTheme()));
-            suggestionsListView.setVisibility(View.GONE);
+
+            // Hide the suggestions list and remove focus from the search bar on UI thread
+            suggestionsListView.post(() -> {
+                suggestionsListView.setVisibility(View.GONE);
+            });
+            searcher.clearFocus();
+            hideKeyboard(); // Hide the keyboard
         });
 
         // Set up the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
         try {
-            assert mapFragment != null;
-            mapFragment.getMapAsync(this);
+            assert mapFragment != null; // Ensure the map fragment is not null
+            mapFragment.getMapAsync(this); // Initialize the map asynchronously
         } catch (Exception e) {
-            Log.e("MapFragment", "Error initializing the map: " + e.getMessage(), e);
+            Log.e("MapFragment", "Error initializing map: " + e.getMessage());
         }
 
         mapMessage.setVisibility(View.GONE);
-        return rootView;
+        return rootView; // Return the created view
     }
 
-    private LatLng getLatLngFromPlace(String trail) {
-        // Use Geocoder to fetch coordinates for a city name
-        Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocationName(trail, 1);  // Get the first result
-            if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                double latitude = address.getLatitude();
-                double longitude = address.getLongitude();
-                return new LatLng(latitude, longitude);
-            } else {
-                Log.e("MapFragment", "Trail not found");
-                return null;
+    // Hide the keyboard programmatically
+    private void hideKeyboard() {
+        View view = requireActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    // Set up the zoom in and zoom out button functionalities
+    private void setZoomControls() {
+        zoomInButton.setOnClickListener(v -> map.animateCamera(CameraUpdateFactory.zoomIn()));
+        zoomOutButton.setOnClickListener(v -> map.animateCamera(CameraUpdateFactory.zoomOut()));
+    }
+
+    // Move the camera to a specific location with the given zoom level
+    private void moveCameraTo(LatLng location, float zoomLevel) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+    }
+
+    // Perform a geocoding search for a given address or trail
+    private void searchAddressByName(Trail trail, boolean addMarker) {
+        // First, check if the trail exists locally
+        Log.d("APISaver","Checking to see if we can save API calls...");
+        Trail savedTrail = findTrailByName(trail.getName());
+
+        if(savedTrail != null && savedTrail.getLatLng() != null){
+
+            Log.d("APISaver","Trail found. We saved an API call!");
+            // Trail found locally, use its latLng
+            LatLng latLng = savedTrail.getLatLng();
+
+            if (addMarker) {
+                addMarkerToMap(savedTrail, latLng);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("MapFragment", "Error in geocoding: " + e.getMessage());
+
+            // Move the camera to the saved location
+            moveCameraTo(latLng, searchZoom);
+
+            Log.d("UserSave", "Loaded trail from local storage: " + savedTrail.getName());
+
+        } else {
+            // Trail not found locally, perform geocoding
+            Log.d("APISaver","Trail not found locally, performing api call...");
+            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+            try {
+                // Perform the geocoding query to get matching addresses
+                List<Address> addresses = geocoder.getFromLocationName(trail.getName() + " Kelowna, BC", 1);
+                if (!addresses.isEmpty()) {
+                    // Get the location of the first address
+                    Address address = addresses.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                    // Add a marker if required
+                    if (addMarker) {
+                        addMarkerToMap(trail, latLng);
+                    }
+
+                    // Set the trail's latLng and save it locally
+                    trail.setLatLng(latLng);
+                    saveTrailToLocal(trail);
+
+                    // Move the camera to the found location
+                    moveCameraTo(latLng, searchZoom);
+                } else {
+                    // No matching addresses found, show an error toast
+                    Toast.makeText(requireContext(), "Location not found for: " + trail.getName(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                Log.e("MapFragment", "Geocoding error: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Adds a marker to the map for the given trail at the specified location.
+     *
+     * @param trail The Trail object.
+     * @param latLng The location where the marker should be placed.
+     */
+    private void addMarkerToMap(Trail trail, LatLng latLng){
+        requireActivity().runOnUiThread(() -> {
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(trail.getName())
+                    .snippet(trail.toStringShort()));
+            if (marker != null){
+                marker.showInfoWindow();
+            }
+        });
+    }
+
+    /**
+     * Saves a Trail object locally using SharedPreferences.
+     * If a trail with the same name exists, it replaces the existing trail.
+     *
+     * @param trail The Trail object to save.
+     */
+    private void saveTrailToLocal(Trail trail){
+        try {
+            Gson gson = new Gson();
+
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("local_trails", Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString("trails", null);
+
+            Type type = new TypeToken<List<Trail>>(){}.getType();
+            List<Trail> trailList;
+
+            if (json != null){
+                trailList = gson.fromJson(json, type);
+                Log.d("SaveTrail", "Loaded existing trails: " + trailList.size());
+            } else {
+                trailList = new ArrayList<>();
+                Log.d("SaveTrail", "Initialized new trail list.");
+            }
+
+            boolean trailExists = false;
+
+            for (int i = 0; i < trailList.size(); i++){
+                if (trailList.get(i).getName().equalsIgnoreCase(trail.getName())){
+                    trailList.set(i, trail);
+                    trailExists = true;
+                    Log.d("SaveTrail", "Replaced existing trail: " + trail.getName());
+                    break;
+                }
+            }
+
+            if (!trailExists){
+                trailList.add(trail);
+                Log.d("SaveTrail", "Added new trail: " + trail.getName());
+            }
+
+            String updatedJson = gson.toJson(trailList);
+            boolean isSaved = sharedPreferences.edit().putString("trails", updatedJson).commit(); // Using commit()
+            Log.d("SaveTrail", "SharedPreferences commit successful: " + isSaved);
+
+
+        } catch (Exception e) {
+            Log.e("SaveTrail", "Error saving Trail", e);
+        }
+    }
+
+    private List<Trail> getSavedTrails(){
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("local_trails", Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString("trails", null);
+        Type type = new TypeToken<List<Trail>>(){}.getType();
+        return json != null ? gson.fromJson(json, type) : new ArrayList<>();
+    }
+
+    private Trail findTrailByName(String name){
+        List<Trail> savedTrails = getSavedTrails();
+        for(Trail t : savedTrails){
+            if(t.getName().equalsIgnoreCase(name)){
+                return t;
+            }
         }
         return null;
     }
 
-    private void pinAndMove(String title, String snippet, LatLng latLng, float zoomLevel) {
-        if (map != null) {
-            addMarker(title, snippet, latLng);
-            // Zoom out to the default zoom level
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom), 1000, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    // Move to the target location
-                    map.animateCamera(CameraUpdateFactory.newLatLng(latLng), 1000, new GoogleMap.CancelableCallback() {
-                        @Override
-                        public void onFinish() {
-                            // Step 3: Zoom in to the desired zoom level (search zoom)
-                            map.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel), 1000, null);
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            // Handle if the animation is canceled
-                        }
-                    });
-                }
-                @Override
-                public void onCancel() {
-                    // Handle if the animation is canceled
-                }
-            });
-        } else {
-            Log.e("MapFragment", "Map not initialized.");
-        }
-    }
-
-
-
-    private void moveCameraTo(LatLng latLng, float zoomLevel){
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-    }
-
-
-    private void setZoomControls() {
-        zoomInButton.setOnClickListener(v -> {
-            float currentZoom = map.getCameraPosition().zoom;
-            if (currentZoom < map.getMaxZoomLevel()) {
-                map.animateCamera(CameraUpdateFactory.zoomTo(currentZoom + 1));
-            }
-        });
-
-        zoomOutButton.setOnClickListener(v -> {
-            float currentZoom = map.getCameraPosition().zoom;
-            if (currentZoom > map.getMinZoomLevel()) {
-                map.animateCamera(CameraUpdateFactory.zoomTo(currentZoom - 1));
-            }
-        });
-    }
-
-    // Create an interface for the API
-    public interface GeocodingService {
-        @GET("maps/api/geocode/json")
-        Call<GeocodingResponse> getLocationDetails(
-                @Query("address") String address,
-                @Query("key") String apiKey
-        );
-    }
-
-    // Create a response model
-    public static class GeocodingResponse {
-        @SerializedName("results")
-        public List<GeocodeResult> results;
-
-        public  class GeocodeResult {
-            @SerializedName("formatted_address")
-            public String formattedAddress;
-
-            @SerializedName("geometry")
-            public Geometry geometry;
-        }
-
-        public  class Geometry {
-            @SerializedName("location")
-            public Location location;
-        }
-
-        public  class Location {
-            @SerializedName("lat")
-            public double latitude;
-
-            @SerializedName("lng")
-            public double longitude;
-        }
-    }
-
-    // In your MapFragment
-    private void searchAddressByName(Trail trail, boolean isTrail) {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://maps.googleapis.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        GeocodingService service = retrofit.create(GeocodingService.class);
-
-        // API Key on a .java file, what could go wrong?
-        // Move this to another file if possible
-        Call<GeocodingResponse> call = service.getLocationDetails(
-                trail.getName() + (isTrail ? "Trail Kelowna, British Columbia, Canada" : ""),
-                "AIzaSyB5pETZIWcmksqfY20ZfTP27BKOL7bWFjk"
-        );
-
-        call.enqueue(new Callback<GeocodingResponse>() {
-            @Override
-            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                if (response.isSuccessful() && response.body() != null && !response.body().results.isEmpty()) {
-                    GeocodingResponse.GeocodeResult result = response.body().results.get(0);
-
-                    // Get the formatted address to the actual name
-                    // Wondering if this search also auto corrects?
-                    String actualNameFound = result.formattedAddress.split(",")[0];
-
-                    // Get coordinates
-                    double latitude = result.geometry.location.latitude;
-                    double longitude = result.geometry.location.longitude;
-
-                    // Update map with trail location
-                    LatLng trailLocation = new LatLng(latitude, longitude);
-                    pinAndMove(actualNameFound, trail.toStringShort(), trailLocation, searchZoom);
-                } else {
-                    Toast.makeText(getContext(), "Trail not found", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GeocodingResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Error searching trail", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void addMarker(String title, String snippet, LatLng position) {
-        if (map != null) {
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(position)
-                    .title(title)
-                    .snippet(snippet);
-
-            Marker marker = map.addMarker(markerOptions);
-
-            // Show info window by default
-            if (marker != null) {
-                marker.showInfoWindow();
-            }
-        }
-
-        // Usage example:
-        // LatLng hikeLocation = new LatLng(49.8801, -119.4436);
-        // Kelowna coordinates
-        // addMarker("Hike Name", "Difficulty: Easy\nLength: 5km", hikeLocation);
-    }
-
-    private void hideKeyboard() {
-        View view = requireActivity().getCurrentFocus();
-        if (view != null) {
-            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager)
-                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    private void logSavedTrails(){
+        List<Trail> savedTrails = getSavedTrails();
+        for(Trail trail : savedTrails){
+            Log.d("SavedTrails", "Trail: " + trail.getName() + ", Location: " + trail.getLatLng());
         }
     }
 

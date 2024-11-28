@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void validateUser(DatabaseReference userRef, String usr, String psw, boolean rememberMe) {
+
         // Add null checks for input parameters
         if (usr == null || psw == null) {
             Toast.makeText(MainActivity.this, "Username or password cannot be null", Toast.LENGTH_SHORT).show();
