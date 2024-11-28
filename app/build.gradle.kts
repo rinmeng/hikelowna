@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit);
+    implementation(libs.converter.gson);
     implementation(libs.material.v120);
     implementation(libs.gson)
     implementation(platform(libs.firebase.bom))
@@ -54,11 +56,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation(libs.play.services.maps)
 }
 
 buildscript {
     dependencies {
-        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
+        classpath(libs.secrets.gradle.plugin)
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,14 +8,16 @@
     android:background="@color/gainsboro"
     tools:context=".ui.MapFragment">
 
-    <!-- Google Map Fragment -->
+    <!-- Google Map Fragment Container -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="331dp" />
 
-    <!-- Banner View -->
+    <!-- Top banner with gradient background -->
     <View
         android:id="@+id/banner"
         android:layout_width="match_parent"
@@ -24,53 +27,94 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- TextView positioned on top of the banner -->
+    <!-- Vertical guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.83" />
 
-    <!-- Zoom In Button -->
+    <!-- Horizontal guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <!-- User position button -->
     <Button
-        android:id="@+id/zoomOutButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:text="-"
+        android:id="@+id/userPositionButton"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
+        android:background="@drawable/userposition_foreground"
         android:textSize="25sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/zoomInButton"
+        app:layout_constraintEnd_toEndOf="@+id/zoomInButton"
+        app:layout_constraintStart_toStartOf="@+id/zoomInButton" />
 
-    <!-- Zoom Out Button -->
+    <!-- Zoom-in button -->
     <Button
         android:id="@+id/zoomInButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:text="+"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
         android:textSize="25sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/zoomOutButton" />
+        android:background="@drawable/zoomin_foreground"
+        app:layout_constraintBottom_toTopOf="@+id/zoomOutButton"
+        app:layout_constraintEnd_toEndOf="@+id/zoomOutButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/zoomOutButton" />
 
+    <!-- Zoom-out button -->
+    <Button
+        android:id="@+id/zoomOutButton"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
+        android:background="@drawable/zoomout_foreground"
+        android:layout_marginStart="@dimen/button_spacing_x_map"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideline"
+        app:layout_constraintStart_toStartOf="@+id/verticalGuideline" />
+
+    <!-- Search bar for trail search -->
     <SearchView
         android:id="@+id/searcher"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:textAlignment="center"
+        android:background="@android:color/transparent"
         android:queryHint="Search for a trail..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/banner"
         app:layout_constraintTop_toTopOf="@+id/map" />
 
+    <!-- List for displaying search suggestions -->
     <ListView
         android:id="@+id/suggestionsListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="295dp"
         android:layout_below="@id/searcher"
+        android:background="@color/gainsboro"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/searcher"
-        app:layout_constraintTop_toBottomOf="@+id/banner"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
+
+    <!-- Message display at the bottom -->
+    <TextView
+        android:id="@+id/mapMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mapMessage"
+        android:textColor="@color/gainsboro"
+        android:textSize="25sp"
+        android:fontFamily="@font/nexaheavy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

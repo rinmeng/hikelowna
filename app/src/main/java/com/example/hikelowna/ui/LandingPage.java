@@ -21,7 +21,26 @@ public class LandingPage extends AppCompatActivity implements BottomNavigationVi
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        // Get the fragment to open from the Intent
+        String openFragment = getIntent().getStringExtra("openFragment");
+
+        if (openFragment != null) {
+            switch (openFragment) {
+                case "MapFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.map); // Set the map as selected
+                    break;
+                case "ProfileFragment":
+                    bottomNavigationView.setSelectedItemId(R.id.profile); // Set the profile as selected
+                    break;
+                default:
+                    bottomNavigationView.setSelectedItemId(R.id.home); // Default to home
+                    break;
+            }
+        } else {
+            // Default selection if no intent extra is provided
+            bottomNavigationView.setSelectedItemId(R.id.home);
+        }
     }
 
     @Override
