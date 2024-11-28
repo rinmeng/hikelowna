@@ -76,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
             usernameInput.setText(savedUser.getUsername());
             passwordInput.setText(savedUser.getPasswordHash());
             rememberMeInput.setChecked(true);
+            try{
+                validateUser(userRef, savedUser.getUsername(), savedUser.getPasswordHash(), rememberMeInput.isChecked());
+            }
+            catch (Exception e){
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
 
         loginButton.setOnClickListener(view -> {
@@ -129,11 +135,12 @@ public class MainActivity extends AppCompatActivity {
                             // Null-safe password comparison
                             if (storedPassword.equals(psw)) {
                                 // Then advance them to the next screen
-                                Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Welcome back " + foundUser.getUsername() + "!", Toast.LENGTH_SHORT).show();
 
                                 // Move Intent creation and start inside the successful login block
                                 Intent it = new Intent(MainActivity.this, LandingPage.class);
                                 it.putExtra("userFoundedFromSearch", foundUser);
+                                it.putExtra("openFragment", "MapFragment");
                                 startActivity(it);
 
                                 if (rememberMe){

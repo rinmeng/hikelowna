@@ -13,4 +13,5 @@
     <color name="darkslategrey">#2f4858</color>
     <color name="darkslategreen">#005247</color>
     <color name="gainsboro">#dfe0df</color>
+    <color name="zoom_background">#EB810A</color>
 </resources>
