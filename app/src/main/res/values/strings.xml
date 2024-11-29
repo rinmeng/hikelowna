@@ -15,5 +15,24 @@
     <string name="google_maps_api_key">AIzaSyB5pETZIWcmksqfY20ZfTP27BKOL7bWFjk</string>
     <string name="mapMessage">Initializing Map...</string>
     <string name="button_size_map">20dp</string>
+    <string name="hikeTitle">Hike Title</string>
+    <string name="hikeDetails">Hike Details</string>
+    <string name="popupTitle">Popup Title</string>
+    <string name="popupDescription">Popup Description</string>
+    <string name="hikeTimer">00:00:00</string>
+    <string name="pauseHike">⏸️ Hike</string>
+    <string name="resumeHike">▶️ Hike</string>
+    <string name="finishHike">🏁 Hike</string>
+    <string name="pause">⏸️</string>
+    <string name="redCircle">🔴</string>
+    <string name="greenCircle">🟢</string>
+    <string name="blackCircle">⚫</string>
+    <string name="hikeLengthTitle">Length</string>
+    <string name="hikeEstimatedTimeTitle">Estimated Time</string>
+    <string name="hikeLengthText">00.00 km</string>
+    <string name="hikeEstimatedTimeText">0.00 hr</string>
+    <string name="timeElapsedTitle">Time Elapsed</string>
+    <string name="textHint">Click on the marker for more details</string>
+
 
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,11 +28,19 @@
 
     <!-- Vertical guideline -->
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verticalGuideline"
+        android:id="@+id/verticalGuidelineRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.83" />
+
+    <!-- Vertical guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuidelineLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.17" />
 
     <!-- Horizontal guideline -->
     <androidx.constraintlayout.widget.Guideline
@@ -61,8 +68,8 @@
         android:layout_width="@dimen/button_size_map"
         android:layout_height="@dimen/button_size_map"
         android:layout_marginBottom="@dimen/button_spacing_y_map"
-        android:textSize="25sp"
         android:background="@drawable/zoomin_foreground"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/zoomOutButton"
         app:layout_constraintEnd_toEndOf="@+id/zoomOutButton"
         app:layout_constraintHorizontal_bias="0.0"
@@ -73,12 +80,51 @@
         android:id="@+id/zoomOutButton"
         android:layout_width="@dimen/button_size_map"
         android:layout_height="@dimen/button_size_map"
+        android:layout_marginStart="@dimen/button_spacing_x_map"
         android:layout_marginBottom="@dimen/button_spacing_y_map"
         android:background="@drawable/zoomout_foreground"
-        android:layout_marginStart="@dimen/button_spacing_x_map"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/horizontalGuideline"
-        app:layout_constraintStart_toStartOf="@+id/verticalGuideline" />
+        app:layout_constraintStart_toStartOf="@+id/verticalGuidelineRight" />
+
+    <!-- Trail remove button -->
+    <Button
+        android:id="@+id/trailRemoveButton"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginEnd="@dimen/button_spacing_x_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
+        android:background="@drawable/trail_remove_foreground"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/verticalGuidelineLeft" />
+
+    <!-- Trail edit button -->
+
+    <!-- Trail add button -->
+    <Button
+        android:id="@+id/trailEditButton"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
+        android:background="@drawable/trail_edit_foreground"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/trailAddButton"
+        app:layout_constraintEnd_toEndOf="@+id/trailAddButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/trailAddButton" />
+
+    <Button
+        android:id="@+id/trailAddButton"
+        android:layout_width="@dimen/button_size_map"
+        android:layout_height="@dimen/button_size_map"
+        android:layout_marginBottom="@dimen/button_spacing_y_map"
+        android:background="@drawable/trail_add_foreground"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/trailRemoveButton"
+        app:layout_constraintEnd_toEndOf="@+id/trailRemoveButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/trailRemoveButton" />
 
     <!-- Search bar for trail search -->
     <SearchView
@@ -108,13 +154,14 @@
         android:id="@+id/mapMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
         android:text="@string/mapMessage"
         android:textColor="@color/gainsboro"
         android:textSize="25sp"
-        android:fontFamily="@font/nexaheavy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
