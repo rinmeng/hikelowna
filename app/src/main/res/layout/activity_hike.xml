@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkslategrey"
+    tools:context=".HikeActivity">
+
+    <TextView
+        android:id="@+id/timeElapsedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="@string/timeElapsedTitle"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.452"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeEstimatedTimeText" />
+
+    <TextView
+        android:id="@+id/hikeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeTitle"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hikeDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeDetails"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeTitle" />
+
+    <TextView
+        android:id="@+id/hikeLengthTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeLengthTitle"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeDetails" />
+
+    <TextView
+        android:id="@+id/hikeLengthText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeLengthText"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeLengthTitle" />
+
+    <TextView
+        android:id="@+id/hikeEstimatedTimeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeEstimatedTimeTitle"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeLengthText" />
+
+    <TextView
+        android:id="@+id/hikeTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeTimer"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="60dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeElapsedTitle" />
+
+    <TextView
+        android:id="@+id/hikeEstimatedTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="@string/hikeEstimatedTimeText"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hikeEstimatedTimeTitle" />
+
+    <TextView
+        android:id="@+id/hikeTimerInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="108dp"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="@string/redCircle"
+        android:textAlignment="center"
+        android:textColor="@color/gainsboro"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/timeElapsedTitle" />
+
+    <Button
+        android:id="@+id/finishHikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="@string/finishHike"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/pauseHikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="@string/pauseHike"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/finishHikeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
