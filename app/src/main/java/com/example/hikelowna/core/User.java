@@ -9,10 +9,7 @@ public class User implements Serializable {
     private final List<Hike> hikingHistory;
     private String username;
     private String displayName;
-    private String email;
     private String passwordHash;
-    private String profilePicture;
-    private String bio;
     private String location;
     private String preferredDifficultyLevel;
 
@@ -22,11 +19,9 @@ public class User implements Serializable {
         hikingHistory = new ArrayList<>();
     }
 
-    public User(String username, String passwordHash, String email, String bio, String location, String preferredDifficultyLevel) {
+    public User(String username, String passwordHash, String location, String preferredDifficultyLevel) {
         setUsername(username);
         setPasswordHash(passwordHash);
-        setEmail(email);
-        setBio(bio);
         setLocation(location);
         setPreferredDifficultyLevel(preferredDifficultyLevel);
         // Initialize all lists
@@ -45,29 +40,6 @@ public class User implements Serializable {
         this.displayName = displayName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
 
     public String getLocation() {
         return location;
@@ -110,10 +82,7 @@ public class User implements Serializable {
         return "User{" + "\n" +
                 "   username = " + (username != null ? username : "null") + "\n" +
                 "   displayName = " + (displayName != null ? displayName : "null") + "\n" +
-                "   email = " + (email != null ? email : "null") + "\n" +
                 "   password = " + (passwordHash != null ? passwordHash : "null") + "\n" +
-                "   profilePicture = " + (profilePicture != null ? profilePicture : "null") + "\n" +
-                "   bio = " + (bio != null ? bio : "null") + "\n" +
                 "   location =" + (location != null ? location : "null") + "\n" +
                 "   preferredDifficultyLevel = " + (preferredDifficultyLevel != null ? preferredDifficultyLevel : "null") + "\n" +
                 "   hikingHistory = " + (hikingHistory != null ? hikingHistory.toString() : "null");

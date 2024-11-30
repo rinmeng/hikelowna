@@ -68,16 +68,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Determine if user was remembered last time, and compare it to the user on the userRef, if they mismatch then
         // Alert user that their password was changed
+
         User savedUser = getUserFromLocal();
         if (savedUser != null) {
             // Set the username and password to the one found locally
             usernameInput.setText(savedUser.getUsername());
             passwordInput.setText(savedUser.getPasswordHash());
             rememberMeInput.setChecked(true);
-            try {
-                validateUser(userRef, savedUser.getUsername(), savedUser.getPasswordHash(), rememberMeInput.isChecked());
-            } catch (Exception e) {
-                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (!UserManager.isLoggedInOnce()) {
+                try {
+                    validateUser(userRef, savedUser.getUsername(), savedUser.getPasswordHash(), rememberMeInput.isChecked());
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -134,16 +137,12 @@ public class MainActivity extends AppCompatActivity {
                             if (storedPassword.equals(psw)) {
                                 // Then advance them to the next screen
                                 Toast.makeText(MainActivity.this, "Welcome back " + foundUser.getUsername() + "!", Toast.LENGTH_SHORT).show();
-
                                 // Move Intent creation and start inside the successful login block
                                 Intent it = new Intent(MainActivity.this, LandingPage.class);
-                                it.putExtra("userFoundedFromSearch", foundUser);
                                 UserManager.getInstance().setCurrentUser(foundUser);
+                                it.putExtra("userFoundedFromSearch", foundUser);
                                 it.putExtra("openFragment", "MapFragment");
-                                it.putExtra("username",foundUser.getUsername());
-                                it.putExtra("location",foundUser.getLocation());
-                                it.putExtra("bio",foundUser.getBio());
-                                it.putExtra("level",foundUser.getPreferredDifficultyLevel());
+                                UserManager.isLoggedInOnce(true);
                                 startActivity(it);
 
                                 if (rememberMe) {
