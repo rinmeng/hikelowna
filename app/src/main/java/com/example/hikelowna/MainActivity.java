@@ -140,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
                                 it.putExtra("userFoundedFromSearch", foundUser);
                                 UserManager.getInstance().setCurrentUser(foundUser);
                                 it.putExtra("openFragment", "MapFragment");
+                                it.putExtra("username",foundUser.getUsername());
+                                it.putExtra("location",foundUser.getLocation());
+                                it.putExtra("bio",foundUser.getBio());
+                                it.putExtra("level",foundUser.getPreferredDifficultyLevel());
                                 startActivity(it);
 
                                 if (rememberMe) {
@@ -267,4 +271,5 @@ public class MainActivity extends AppCompatActivity {
         return welcomeTexts[randomIndex] + " Welcome back.";
     }
 }
+
 

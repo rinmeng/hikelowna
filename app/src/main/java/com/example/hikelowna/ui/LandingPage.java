@@ -25,6 +25,19 @@ public class LandingPage extends AppCompatActivity implements BottomNavigationVi
         // Get the fragment to open from the Intent
         String openFragment = getIntent().getStringExtra("openFragment");
 
+        //user info
+        String username = getIntent().getStringExtra("username");
+        String location = getIntent().getStringExtra("location");
+        String bio = getIntent().getStringExtra("bio");
+        String level = getIntent().getStringExtra("level");
+
+        Bundle b = new Bundle();
+        b.putString("username",username);
+        b.putString("location",location);
+        b.putString("bio",bio);
+        b.putString("level",level);
+        profileFragment.setArguments(b);
+
         if (openFragment != null) {
             switch (openFragment) {
                 case "MapFragment":
