@@ -1,110 +1,82 @@
 package com.example.hikelowna.ui;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.hikelowna.MainActivity;
 import com.example.hikelowna.R;
+import com.example.hikelowna.core.User;
+import com.example.hikelowna.core.UserManager;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment#} factory method to
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
 
-    private Button LogOut;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
-    private static final String ARG_PARAM4 = "param4";
-
-    // TODO: Rename and change types of parameters
-    private String username;
-    private String location;
-    private String bio;
-    private String level;
+    EditText username, displayName, location, preferredDifficulty;
+    Button editButton, logoutButton;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, fragment.username);
-        args.putString(ARG_PARAM2, fragment.location);
-        args.putString(ARG_PARAM3, fragment.bio);
-        args.putString(ARG_PARAM4, fragment.level);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            username = getArguments().getString("username");
-            location = getArguments().getString("location");
-            bio = getArguments().getString("bio");
-            level = getArguments().getString("level");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View baseView = inflater.inflate(R.layout.fragment_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        TextView userView = baseView.findViewById(R.id.userView);
-        userView.setText("Name: " + username);
+        username = rootView.findViewById(R.id.usernameText);
+        displayName = rootView.findViewById(R.id.userDisplayNameText);
+        location = rootView.findViewById(R.id.locationText);
+        preferredDifficulty = rootView.findViewById(R.id.preferredDifficultyText);
+        editButton = rootView.findViewById(R.id.editButton);
+        logoutButton = rootView.findViewById(R.id.logoutButton);
 
-        TextView userView2 = baseView.findViewById(R.id.locationView);
-        userView2.setText("Location: " + location);
+        UserManager userManager = UserManager.getInstance();
+        User user = userManager.getCurrentUser();
 
-        TextView userView3 = baseView.findViewById(R.id.bioView);
-        userView3.setText("Bio: " + bio);
+        // Set the text fields to the user's information
+        String usernameText = "@" + user.getUsername();
+        username.setText(usernameText);
+        displayName.setText(user.getDisplayName());
+        location.setText(user.getLocation());
+        preferredDifficulty.setText(user.getPreferredDifficultyLevel());
 
-        TextView userView4 = baseView.findViewById(R.id.levelView);
-        userView4.setText("User Difficulty: " + level);
+        logoutButton.setOnClickListener(view -> {
+            userManager.logout();
+            Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
 
-        Button logOut = baseView.findViewById(R.id.exit);
-        logOut.setOnClickListener(v ->{
-            logOut.setEnabled(false);
-            signedOut();
+            // Create an intent to start MainActivity
+            Intent it = new Intent(getActivity(), MainActivity.class);
+            // Clear the back stack to prevent returning to previous screens
+            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(it);
+
+            // If the current activity should close
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
         });
-        return baseView;
-    }
 
-    private void signedOut(){
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_CLEAR_TASK|intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        Toast.makeText(getActivity(),"Logged out successfully!",Toast.LENGTH_SHORT).show();
+
+        // Inflate the layout for this fragment
+        return rootView;
     }
 }

@@ -34,100 +34,111 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/userView"
-        android:layout_width="406dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="102dp"
-        android:layout_marginEnd="217dp"
-        android:layout_marginBottom="588dp"
-        android:text="Username"
+    <EditText
+        android:id="@+id/userDisplayNameText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Display Name"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.035"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.214" />
+        app:layout_constraintTop_toBottomOf="@+id/userDisplayNameTextView" />
 
-    <TextView
-        android:id="@+id/locationView"
-        android:layout_width="99dp"
-        android:layout_height="61dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginBottom="529dp"
+
+    <EditText
+        android:id="@+id/usernameText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="\@Username"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+    <EditText
+        android:id="@+id/preferredDifficultyText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Preferred Difficulty"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintTop_toBottomOf="@+id/preferredDiffucultyTextView" />
+
+    <EditText
+        android:id="@+id/locationText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="Location"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userView"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/levelView"
-        android:layout_width="175dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="44dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/locationView"
-        app:layout_constraintTop_toBottomOf="@+id/userView" />
-
-    <TextView
-        android:id="@+id/bioView"
-        android:layout_width="277dp"
-        android:layout_height="171dp"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="352dp"
-        android:layout_marginEnd="87dp"
-        android:text="Bio: "
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
     <Button
-        android:id="@+id/exit"
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Edit"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/logoutButton"
+        app:layout_constraintEnd_toEndOf="@+id/logoutButton"
+        app:layout_constraintStart_toStartOf="@+id/logoutButton" />
+
+    <Button
+        android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="589dp"
         android:layout_marginEnd="157dp"
-        android:layout_marginBottom="94dp"
+        android:layout_marginBottom="88dp"
+        android:fontFamily="@font/nexaheavy"
         android:text="Log Out"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button2"
+    <TextView
+        android:id="@+id/userDisplayNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="268dp"
-        android:layout_marginBottom="434dp"
-        android:text="Friends"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:text="Display Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationView" />
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
 
-    <Button
-        android:id="@+id/button3"
+    <TextView
+        android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="209dp"
-        android:layout_marginTop="251dp"
-        android:layout_marginEnd="101dp"
-        android:layout_marginBottom="432dp"
-        android:text="Reviews"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="28dp"
+        android:text="Username"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/userDisplayNameText" />
+
+    <TextView
+        android:id="@+id/locationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:text="Location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameText" />
+
+    <TextView
+        android:id="@+id/preferredDiffucultyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:text="Preferred Difficulty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
