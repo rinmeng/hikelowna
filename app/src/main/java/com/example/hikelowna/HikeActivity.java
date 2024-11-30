@@ -1,8 +1,10 @@
 package com.example.hikelowna;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +15,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hikelowna.core.Hike;
+import com.example.hikelowna.core.UserManager;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class HikeActivity extends AppCompatActivity {
     TextView hikeTitle, hikeDetails, hikeTimer, hikeTimerInfo, hikeLengthText, hikeEstimatedTimeText;
     Button finishHikeButton, pauseHikeButton;
@@ -21,6 +27,8 @@ public class HikeActivity extends AppCompatActivity {
     long startTime, elapsedTime;
     boolean isPaused = false;
     String separator = " | ";
+    String trialName, trailDifficultyStars, trailRatingStars;
+    float trailLength, trailEstimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,7 @@ public class HikeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_hike);
 
+        // Initialize views
         hikeTitle = findViewById(R.id.hikeTitle);
         hikeDetails = findViewById(R.id.hikeDetails);
         finishHikeButton = findViewById(R.id.finishHikeButton);
@@ -37,28 +46,26 @@ public class HikeActivity extends AppCompatActivity {
         hikeLengthText = findViewById(R.id.hikeLengthText);
         hikeEstimatedTimeText = findViewById(R.id.hikeEstimatedTimeText);
 
+        // Retrieve intent data
         Intent it = getIntent();
-        String trialName = it.getStringExtra("trailName");
-        String trailDifficultyStars = it.getStringExtra("trailDifficultyStars");
-        String trailRatingStars = it.getStringExtra("trailRatingStars");
-        float trailLength = it.getFloatExtra("trailLength", 0);
-        float trailEstimatedTime = it.getFloatExtra("trailEstimatedTime", 0);
+        trialName = it.getStringExtra("trailName");
+        trailDifficultyStars = it.getStringExtra("trailDifficultyStars");
+        trailRatingStars = it.getStringExtra("trailRatingStars");
+        trailLength = it.getFloatExtra("trailLength", 0);
+        trailEstimatedTime = it.getFloatExtra("trailEstimatedTime", 0);
 
-        String trailDetails = "";
+        // Set trail information
         if (trialName != null) {
             hikeTitle.setText(trialName);
-            trailDetails = trailRatingStars + separator + trailDifficultyStars;
+            String trailDetails = trailRatingStars + separator + trailDifficultyStars;
             hikeDetails.setText(trailDetails);
             hikeLengthText.setText(String.format("%.2f km", trailLength));
-            hikeEstimatedTimeText.setText(String.format("%.2f hours", trailEstimatedTime));
-
-
+            hikeEstimatedTimeText.setText(String.format("%.1f minutes", trailEstimatedTime));
         } else {
             Toast.makeText(this, "No trail was passed/found.", Toast.LENGTH_SHORT).show();
         }
 
-        hikeDetails.setText(trailDetails);
-
+        // Pause Hike Button
         pauseHikeButton.setOnClickListener(view -> {
             if (isPaused) {
                 startTimer();
@@ -73,23 +80,17 @@ public class HikeActivity extends AppCompatActivity {
             }
         });
 
-        finishHikeButton.setOnClickListener(view -> {
-            if (handler != null) {
-                handler.removeCallbacks(runnable);
-            }
-            if (blinkHandler != null) {
-                blinkHandler.removeCallbacks(blinkRunnable);
-            }
-            Toast.makeText(this, "Hike finished", Toast.LENGTH_SHORT).show();
-            finish();
-        });
+        // Finish Hike Button
+        finishHikeButton.setOnClickListener(view -> showFinishHikeDialog());
 
+        // Handle window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Start timer automatically when activity is created
         startTimer();
         startBlinking();
     }
@@ -147,5 +148,44 @@ public class HikeActivity extends AppCompatActivity {
             blinkHandler.removeCallbacks(blinkRunnable);
         }
         hikeTimerInfo.setText(R.string.redCircle);
+    }
+
+    private void showFinishHikeDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Finish Hike")
+                .setMessage("Do you want to save this hike?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Record the hike
+                    String elapsedTime = hikeTimer.getText().toString();
+                    Hike hike = new Hike("myhike", "myhikeDescription");
+                    hike.setElapsedTime(elapsedTime);
+                    hike.setTrailName(trialName);
+                    hike.setTrailDifficultyStars(trailDifficultyStars);
+                    hike.setTrailRatingStars(trailRatingStars);
+                    hike.setTrailLength(trailLength);
+
+                    UserManager userManager = UserManager.getInstance();
+                    userManager.getCurrentUser().addHikeToHistory(hike);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    try {
+                        database.getReference("users").child(userManager.getCurrentUser().getUsername()).setValue(userManager.getCurrentUser());
+                    } catch (Exception e) {
+                        Log.e("HikeActivity", "Error saving hike to database: " + e.getMessage());
+                    }
+
+                    Toast.makeText(this, "Hike finished and recorded!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    pauseTimer();
+                    stopBlinking();
+                    Toast.makeText(this, "Hike not saved.", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .setNeutralButton("Back", (dialog, which) -> {
+                    // Do nothing
+                })
+                .setCancelable(true)
+                .show();
     }
 }

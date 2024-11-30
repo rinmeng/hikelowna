@@ -1,19 +1,15 @@
 package com.example.hikelowna;
-import com.example.hikelowna.ui.LandingPage;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.*;
-import com.example.hikelowna.core.User;
-import com.google.firebase.database.ValueEventListener;
-import android.content.SharedPreferences;
-import com.google.gson.Gson;
-
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +17,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hikelowna.core.User;
+import com.example.hikelowna.core.UserManager;
+import com.example.hikelowna.ui.LandingPage;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
 public class MainActivity extends AppCompatActivity {
 
     // To retreieve user
     private static final String PREFS_NAME = "hikelownaUserPrefs";
     private static final String USER_KEY = "saved_user";
 
-    Button loginButton,registerButton;
+    Button loginButton, registerButton;
     Intent it;
     CheckBox rememberMeInput;
     EditText usernameInput, passwordInput;
@@ -44,14 +50,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
 
-
-
-        // Make a test user and then send it to the database, it also serves as a test for connection.
-        testUser = new User("test","test",
-                "test@test.test","This is a test User",
-                "Kelowna","Moderate");
-
-        userRef.child(testUser.getUsername()).setValue(testUser);
 
         // Process
         usernameInput = findViewById(R.id.usernameInput);
@@ -71,15 +69,14 @@ public class MainActivity extends AppCompatActivity {
         // Determine if user was remembered last time, and compare it to the user on the userRef, if they mismatch then
         // Alert user that their password was changed
         User savedUser = getUserFromLocal();
-        if (savedUser != null){
+        if (savedUser != null) {
             // Set the username and password to the one found locally
             usernameInput.setText(savedUser.getUsername());
             passwordInput.setText(savedUser.getPasswordHash());
             rememberMeInput.setChecked(true);
-            try{
+            try {
                 validateUser(userRef, savedUser.getUsername(), savedUser.getPasswordHash(), rememberMeInput.isChecked());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "User password is not set", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            Log.d("UserFound", "User data: " + foundUser.toString());
+                            Log.d("UserFound", "User data: " + foundUser);
                             Toast.makeText(MainActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
 
                             // Null-safe password comparison
@@ -141,12 +138,13 @@ public class MainActivity extends AppCompatActivity {
                                 // Move Intent creation and start inside the successful login block
                                 Intent it = new Intent(MainActivity.this, LandingPage.class);
                                 it.putExtra("userFoundedFromSearch", foundUser);
+                                UserManager.getInstance().setCurrentUser(foundUser);
                                 it.putExtra("openFragment", "MapFragment");
                                 startActivity(it);
 
-                                if (rememberMe){
+                                if (rememberMe) {
                                     saveUserToLocal(foundUser);
-                                }else{
+                                } else {
                                     clearSavedUser();
                                 }
                             } else {
@@ -231,8 +229,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getInputAsString(Object item){
-        if (item instanceof EditText){
+    private String getInputAsString(Object item) {
+        if (item instanceof EditText) {
             return ((EditText) item).getText().toString().trim();
         } else if (item instanceof CheckBox) {
             return Boolean.toString(((CheckBox) item).isChecked());
