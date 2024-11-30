@@ -36,4 +36,8 @@ public class UserManager {
     public void logout() {
         currentUser = null;
     }
+
+    public void updateUser(User user) {
+        currentUser = user;
+    }
 }

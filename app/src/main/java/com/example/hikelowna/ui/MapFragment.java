@@ -58,6 +58,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     Trail currentSelectedTrail;
     List<LatLng> trailPoints;
 
+    Marker currentMarker;
+
     SearchView searcher;
     List<String> searchResults;
 
@@ -68,7 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Required empty public constructor
     }
 
-    private void addAndSaveTrail(String name, String difficulty, float length, float estimatedTime, float rating) {
+    private void addAndSaveTrail(String name, String difficulty, float length, int estimatedTime, float rating) {
         Trail trail = new Trail(name, difficulty, length, estimatedTime, rating);
         List<LatLng> points = Trail.points(trail);
         if (!points.isEmpty()) {
@@ -85,12 +87,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         trails = new ArrayList<>();
         logSavedTrails();
 
-        addAndSaveTrail("Apex Trail - To Paul's Tomb", "Moderate", 1.21f, 23f, 3.6f);
-        addAndSaveTrail("Paul's Tomb Trail", "Moderate", 2.33f, 46f, 0.0f);
-        addAndSaveTrail("Gordon Trail/Camelot Trail", "Easy", 1.13f, 22f, 0.0f);
-        addAndSaveTrail("Pavilion Trail", "Easy", 0.71f, 13f, 0.0f);
-        addAndSaveTrail("Apex Trail - East", "Hard", 2.70f, 54f, 0.0f);
-        addAndSaveTrail("Pine Trail - To Country Club Dr", "Easy", 0.89f, 17f, 0.0f);
+        addAndSaveTrail("Apex Trail - To Paul's Tomb", "Moderate", 1.21f, 23, 3.6f);
+        addAndSaveTrail("Paul's Tomb Trail", "Moderate", 2.33f, 46, 0.0f);
+        addAndSaveTrail("Gordon Trail/Camelot Trail", "Easy", 1.13f, 22, 0.0f);
+        addAndSaveTrail("Pavilion Trail", "Easy", 0.71f, 13, 0.0f);
+        addAndSaveTrail("Apex Trail - East", "Hard", 2.70f, 54, 0.0f);
+        addAndSaveTrail("Pine Trail - To Country Club Dr", "Easy", 0.89f, 17, 0.0f);
 
         // Sort trails alphabetically for better usability
         Collections.sort(trails);
@@ -356,6 +358,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         locatedTrailButton.setOnClickListener(view -> {
             try {
                 moveCameraTo(currentSelectedTrail.getLatLng(), searchZoom + 1);
+                if (currentMarker != null) {
+                    currentMarker.showInfoWindow();
+                }
             } catch (Exception e) {
                 Toast.makeText(getContext(), "No trail selected to re-center", Toast.LENGTH_SHORT).show();
             }
@@ -431,12 +436,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      */
     private void addMarkerToMap(Trail trail, LatLng latLng) {
         requireActivity().runOnUiThread(() -> {
-            Marker marker = map.addMarker(new MarkerOptions()
+            currentMarker = map.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(trail.getName())
                     .snippet(trail.toStringShort()));
-            if (marker != null) {
-                marker.showInfoWindow();
+            if (currentMarker != null) {
+                currentMarker.showInfoWindow();
             }
         });
     }

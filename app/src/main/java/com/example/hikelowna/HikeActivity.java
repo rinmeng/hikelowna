@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class HikeActivity extends AppCompatActivity {
             String trailDetails = trailRatingStars + separator + trailDifficultyStars;
             hikeDetails.setText(trailDetails);
             hikeLengthText.setText(String.format("%.2f km", trailLength));
-            hikeEstimatedTimeText.setText(String.format("%.1f minutes", trailEstimatedTime));
+            hikeEstimatedTimeText.setText(String.format(" minutes", trailEstimatedTime));
         } else {
             Toast.makeText(this, "No trail was passed/found.", Toast.LENGTH_SHORT).show();
         }
@@ -94,6 +95,7 @@ public class HikeActivity extends AppCompatActivity {
         startTimer();
         startBlinking();
     }
+
 
     private void startTimer() {
         handler = new Handler();
@@ -151,41 +153,60 @@ public class HikeActivity extends AppCompatActivity {
     }
 
     private void showFinishHikeDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Finish Hike")
-                .setMessage("Do you want to save this hike?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    // Record the hike
-                    String elapsedTime = hikeTimer.getText().toString();
-                    Hike hike = new Hike("myhike", "myhikeDescription");
-                    hike.setElapsedTime(elapsedTime);
-                    hike.setTrailName(trialName);
-                    hike.setTrailDifficultyStars(trailDifficultyStars);
-                    hike.setTrailRatingStars(trailRatingStars);
-                    hike.setTrailLength(trailLength);
+        // Inflate the new layout
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View customView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
 
-                    UserManager userManager = UserManager.getInstance();
-                    userManager.getCurrentUser().addHikeToHistory(hike);
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    try {
-                        database.getReference("users").child(userManager.getCurrentUser().getUsername()).setValue(userManager.getCurrentUser());
-                    } catch (Exception e) {
-                        Log.e("HikeActivity", "Error saving hike to database: " + e.getMessage());
-                    }
+        // Bind the views
+        Button backButton = customView.findViewById(R.id.backButton);
+        Button positiveButton = customView.findViewById(R.id.positiveButton);
+        Button negativeButton = customView.findViewById(R.id.negativeButton);
 
-                    Toast.makeText(this, "Hike finished and recorded!", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    pauseTimer();
-                    stopBlinking();
-                    Toast.makeText(this, "Hike not saved.", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .setNeutralButton("Back", (dialog, which) -> {
-                    // Do nothing
-                })
-                .setCancelable(true)
-                .show();
+        // Handle "Back" button click
+        backButton.setOnClickListener(view -> {
+            Toast.makeText(this, "Returning to dialog without changes.", Toast.LENGTH_SHORT).show();
+        });
+
+        // Handle "Yes" button click
+        positiveButton.setOnClickListener(view -> {
+            String elapsedTime = hikeTimer.getText().toString();
+            Hike hike = new Hike("myhike", "myhikeDescription");
+            hike.setElapsedTime(elapsedTime);
+            hike.setTrailName(trialName);
+            hike.setTrailDifficultyStars(trailDifficultyStars);
+            hike.setTrailRatingStars(trailRatingStars);
+            hike.setTrailLength(trailLength);
+
+            UserManager userManager = UserManager.getInstance();
+            userManager.getCurrentUser().addHikeToHistory(hike);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            try {
+                database.getReference("users")
+                        .child(userManager.getCurrentUser().getUsername())
+                        .setValue(userManager.getCurrentUser());
+            } catch (Exception e) {
+                Log.e("HikeActivity", "Error saving hike to database: " + e.getMessage());
+            }
+
+            Toast.makeText(this, "Hike finished and recorded!", Toast.LENGTH_SHORT).show();
+            finish();
+        });
+
+        // Handle "No" button click
+        negativeButton.setOnClickListener(view -> {
+            pauseTimer();
+            stopBlinking();
+            Toast.makeText(this, "Hike not saved.", Toast.LENGTH_SHORT).show();
+            finish();
+        });
+
+        // Set the custom view in the dialog
+        builder.setView(customView);
+        builder.setCancelable(true);
+
+        // Show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 }

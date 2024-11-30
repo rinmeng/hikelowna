@@ -34,61 +34,68 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <EditText
         android:id="@+id/userDisplayNameText"
-        android:layout_width="300dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:enabled="false"
+        android:fontFamily="@font/nexalight"
         android:text="Display Name"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userDisplayNameTextView" />
 
-
-    <EditText
+    <TextView
         android:id="@+id/usernameText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:enabled="false"
+        android:fontFamily="@font/nexalight"
         android:text="\@Username"
         android:textColor="@color/gray"
         android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.351"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
     <EditText
         android:id="@+id/preferredDifficultyText"
-        android:layout_width="300dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:enabled="false"
+        android:fontFamily="@font/nexalight"
         android:text="Preferred Difficulty"
         android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/preferredDiffucultyTextView" />
 
     <EditText
         android:id="@+id/locationText"
-        android:layout_width="300dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:enabled="false"
+        android:fontFamily="@font/nexalight"
         android:text="Location"
         android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="@+id/userDisplayNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
     <Button
         android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Edit"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/logoutButton"
-        app:layout_constraintEnd_toEndOf="@+id/logoutButton"
-        app:layout_constraintStart_toStartOf="@+id/logoutButton" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferredDifficultyText" />
 
     <Button
         android:id="@+id/logoutButton"
@@ -109,34 +116,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nexaheavy"
         android:text="Display Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameText" />
 
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/nexaheavy"
         android:text="Username"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userDisplayNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
 
     <TextView
         android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
+        android:fontFamily="@font/nexaheavy"
         android:text="Location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameText" />
+        app:layout_constraintTop_toBottomOf="@+id/userDisplayNameText" />
 
     <TextView
         android:id="@+id/preferredDiffucultyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
+        android:fontFamily="@font/nexaheavy"
         android:text="Preferred Difficulty"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationText" />
