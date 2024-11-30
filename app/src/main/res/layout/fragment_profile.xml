@@ -89,11 +89,12 @@
         android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/nexaheavy"
-        android:text="Edit"
+        android:text="Edit "
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/preferredDifficultyText" />
 
@@ -103,13 +104,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
         android:layout_marginEnd="157dp"
-        android:layout_marginBottom="88dp"
         android:fontFamily="@font/nexaheavy"
-        android:text="Log Out"
+        android:text="Log Out 🏃"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editButton" />
 
     <TextView
         android:id="@+id/userDisplayNameTextView"
@@ -126,11 +126,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="52dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/banner" />
+
+    <TextView
+        android:id="@+id/hikingHistoryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Hiking History"
+        app:layout_constraintStart_toStartOf="@+id/preferredDifficultyText"
+        app:layout_constraintTop_toBottomOf="@+id/logoutButton" />
 
     <TextView
         android:id="@+id/locationTextView"
@@ -151,5 +161,22 @@
         android:text="Preferred Difficulty"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationText" />
+
+    <ScrollView
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/hikingHistoryText"
+        app:layout_constraintTop_toBottomOf="@+id/hikingHistoryText">
+
+        <LinearLayout
+            android:id="@+id/hikingHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,49 +1,50 @@
 package com.example.hikelowna.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 
 // A feed has a list of comments, and can either be a Review or a post,
-public class Feed{
-    private int likeCount;
-    private int commentCount;
-    private List<Comment> comments;
-    private Post post;
+public class Feed implements Serializable {
+    private Hike hike;
+    private User poster;
 
     // Feed initializer
-    public Feed(){
-        this.likeCount = -1;
-        this.commentCount = -1;
-        this.comments = new ArrayList<>();
-        this.post = new Post();
+    public Feed() {
+        this.hike = new Hike();
+        this.poster = new User();
     }
 
     // Make a feed with a list of comments.
-    public Feed(Post post, List<Comment> comments){
-        this.likeCount = 0;
-        this.commentCount = 0;
-        this.post = new Post();
-        this.comments = comments;
+    public Feed(Hike hike, User poster) {
+        this.hike = hike;
+        this.poster = poster;
     }
 
-
-    public void addFeedComment(Comment comment){
-        this.comments.add(comment);
+    public Feed(Hike hike) {
+        this.hike = hike;
     }
 
-    public void incrementLikes(){
-        this.likeCount++;
+    public User getPoster() {
+        return poster;
     }
 
+    public void setPoster(User poster) {
+        this.poster = poster;
+    }
+
+    public Hike getHike() {
+        return hike;
+    }
+
+    public void setHike(Hike hike) {
+        this.hike = hike;
+    }
+
+    @NonNull
     @Override
     public String toString() {
-        return "Feed{" +
-                "likeCount=" + likeCount +
-                ", commentCount=" + commentCount +
-                ", comments=" + comments +
-                ", posts=" + post.toString() +
-                '}';
+        return "Hike: " + hike.getHikeName() + "\n" +
+                "Poster: " + poster.getUsername();
     }
-
-
 }

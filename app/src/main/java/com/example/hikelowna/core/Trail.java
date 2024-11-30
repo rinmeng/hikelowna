@@ -437,7 +437,6 @@ public class Trail implements Comparable<Trail>, Serializable {
 
 
         } else if (trailName.equals("Gordon Trail/Camelot Trail")) {
-            // Starting of Paulstomb conntected to Gordon
             trailPoints.add(new LatLng(49.9218135, -119.4820004));
             trailPoints.add(new LatLng(49.9218386, -119.4819253));
             trailPoints.add(new LatLng(49.9218904, -119.4818469));

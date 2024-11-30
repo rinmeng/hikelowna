@@ -8,8 +8,9 @@ public class Hike implements Serializable {
     private String elapsedTime;
     private String trailName;
     private String trailDifficultyStars;
-    private String trailRatingStars;
+    private int trailRating;
     private float trailLength;
+    private float trailEstimatedTime;
 
     public Hike() {
         hikeName = "myHike";
@@ -19,6 +20,14 @@ public class Hike implements Serializable {
     public Hike(String hikeName, String hikeDescription) {
         this.hikeName = hikeName;
         this.hikeDescription = hikeDescription;
+    }
+
+    public float getTrailEstimatedTime() {
+        return trailEstimatedTime;
+    }
+
+    public void setTrailEstimatedTime(float trailEstimatedTime) {
+        this.trailEstimatedTime = trailEstimatedTime;
     }
 
     public String getElapsedTime() {
@@ -45,12 +54,12 @@ public class Hike implements Serializable {
         this.trailDifficultyStars = trailDifficultyStars;
     }
 
-    public String getTrailRatingStars() {
-        return trailRatingStars;
+    public int getTrailRating() {
+        return trailRating;
     }
 
-    public void setTrailRatingStars(String trailRatingStars) {
-        this.trailRatingStars = trailRatingStars;
+    public void setTrailRating(int trailRating) {
+        this.trailRating = trailRating;
     }
 
     public float getTrailLength() {

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,10 +15,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.hikelowna.core.Hike;
-import com.example.hikelowna.core.UserManager;
-import com.google.firebase.database.FirebaseDatabase;
-
 public class HikeActivity extends AppCompatActivity {
     TextView hikeTitle, hikeDetails, hikeTimer, hikeTimerInfo, hikeLengthText, hikeEstimatedTimeText;
     Button finishHikeButton, pauseHikeButton;
@@ -29,7 +24,8 @@ public class HikeActivity extends AppCompatActivity {
     boolean isPaused = false;
     String separator = " | ";
     String trialName, trailDifficultyStars, trailRatingStars;
-    float trailLength, trailEstimatedTime;
+    float trailLength;
+    int trailEstimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +49,7 @@ public class HikeActivity extends AppCompatActivity {
         trailDifficultyStars = it.getStringExtra("trailDifficultyStars");
         trailRatingStars = it.getStringExtra("trailRatingStars");
         trailLength = it.getFloatExtra("trailLength", 0);
-        trailEstimatedTime = it.getFloatExtra("trailEstimatedTime", 0);
+        trailEstimatedTime = it.getIntExtra("trailEstimatedTime", 0);
 
         // Set trail information
         if (trialName != null) {
@@ -61,7 +57,7 @@ public class HikeActivity extends AppCompatActivity {
             String trailDetails = trailRatingStars + separator + trailDifficultyStars;
             hikeDetails.setText(trailDetails);
             hikeLengthText.setText(String.format("%.2f km", trailLength));
-            hikeEstimatedTimeText.setText(String.format(" minutes", trailEstimatedTime));
+            hikeEstimatedTimeText.setText(trailEstimatedTime + " minutes");
         } else {
             Toast.makeText(this, "No trail was passed/found.", Toast.LENGTH_SHORT).show();
         }
@@ -162,33 +158,33 @@ public class HikeActivity extends AppCompatActivity {
         Button positiveButton = customView.findViewById(R.id.positiveButton);
         Button negativeButton = customView.findViewById(R.id.negativeButton);
 
+
+        // Set the custom view in the dialog
+        builder.setView(customView);
+        builder.setCancelable(true);
+
+        // Show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
         // Handle "Back" button click
         backButton.setOnClickListener(view -> {
-            Toast.makeText(this, "Returning to dialog without changes.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Returning back to hike", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         });
 
         // Handle "Yes" button click
         positiveButton.setOnClickListener(view -> {
-            String elapsedTime = hikeTimer.getText().toString();
-            Hike hike = new Hike("myhike", "myhikeDescription");
-            hike.setElapsedTime(elapsedTime);
-            hike.setTrailName(trialName);
-            hike.setTrailDifficultyStars(trailDifficultyStars);
-            hike.setTrailRatingStars(trailRatingStars);
-            hike.setTrailLength(trailLength);
 
-            UserManager userManager = UserManager.getInstance();
-            userManager.getCurrentUser().addHikeToHistory(hike);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            try {
-                database.getReference("users")
-                        .child(userManager.getCurrentUser().getUsername())
-                        .setValue(userManager.getCurrentUser());
-            } catch (Exception e) {
-                Log.e("HikeActivity", "Error saving hike to database: " + e.getMessage());
-            }
-
-            Toast.makeText(this, "Hike finished and recorded!", Toast.LENGTH_SHORT).show();
+            Intent it = new Intent(this, ReviewActivity.class);
+            it.putExtra("trailName", trialName);
+            it.putExtra("trailDifficultyStars", trailDifficultyStars);
+            it.putExtra("trailRatingStars", trailRatingStars);
+            it.putExtra("trailLength", trailLength);
+            it.putExtra("trailEstimatedTime", trailEstimatedTime);
+            it.putExtra("elapsedTime", hikeTimer.getText().toString());
+            startActivity(it);
             finish();
         });
 
@@ -199,14 +195,5 @@ public class HikeActivity extends AppCompatActivity {
             Toast.makeText(this, "Hike not saved.", Toast.LENGTH_SHORT).show();
             finish();
         });
-
-        // Set the custom view in the dialog
-        builder.setView(customView);
-        builder.setCancelable(true);
-
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
-
 }

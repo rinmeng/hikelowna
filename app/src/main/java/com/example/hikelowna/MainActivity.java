@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         welcomeText.setText(getWelcomeText());
 
         // Working on Register Button soon
-
         registerButton.setEnabled(false);
         registerButton.setTextColor(Color.GRAY);
 
