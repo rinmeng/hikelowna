@@ -12,7 +12,7 @@ public class Trail implements Comparable<Trail>, Serializable {
     private String name;
     private String difficulty;
     private float length;
-    private float estimatedTime;
+    private int estimatedTime;
     private float rating;
     private LatLng latLng;
 
@@ -21,12 +21,12 @@ public class Trail implements Comparable<Trail>, Serializable {
         this.name = "";
         this.difficulty = "";
         this.length = -1.00f;
-        this.estimatedTime = -1.00f;
+        this.estimatedTime = -1;
         this.rating = 0.0f;
     }
 
     // Full constructor
-    public Trail(String name, String difficulty, float length, float estimatedTime, float rating) {
+    public Trail(String name, String difficulty, float length, int estimatedTime, float rating) {
         this.name = name;
         this.difficulty = difficulty;
         this.length = length;
@@ -1117,7 +1117,7 @@ public class Trail implements Comparable<Trail>, Serializable {
             stars = "⬥⬦⬦⬦⬦";
         } else if (difficulty.equalsIgnoreCase("moderate")) {
             stars = "⬥⬥⬦⬦⬦";
-        } else if (difficulty.equalsIgnoreCase("difficult")) {
+        } else if (difficulty.equalsIgnoreCase("hard")) {
             stars = "⬥⬥⬥⬦⬦";
         } else if (difficulty.equalsIgnoreCase("extreme")) {
             stars = "⬥⬥⬥⬥⬦";
@@ -1136,8 +1136,8 @@ public class Trail implements Comparable<Trail>, Serializable {
     public String toStringShort() {
         return getRatingStars() + separator
                 + getDifficultyStars() + separator
-                + length + "k" + separator
-                + estimatedTime + "m";
+                + length + "km" + separator
+                + estimatedTime + "mins";
     }
 
     // Full toString for detailed view
@@ -1145,7 +1145,7 @@ public class Trail implements Comparable<Trail>, Serializable {
     public String toString() {
         return name + "\n"
                 + getRatingStars() + separator + getDifficultyStars() + "\n"
-                + length + "k" + separator + estimatedTime + "m\n";
+                + length + "km" + separator + estimatedTime + "mins\n";
     }
 
     // Getters and Setters
@@ -1173,11 +1173,11 @@ public class Trail implements Comparable<Trail>, Serializable {
         this.length = length;
     }
 
-    public float getEstimatedTime() {
+    public int getEstimatedTime() {
         return estimatedTime;
     }
 
-    public void setEstimatedTime(float estimatedTime) {
+    public void setEstimatedTime(int estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
 
