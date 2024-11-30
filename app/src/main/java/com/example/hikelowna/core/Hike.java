@@ -1,29 +1,65 @@
 package com.example.hikelowna.core;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Hike {
+public class Hike implements Serializable {
+    private String hikeDescription;
     private String hikeName;
-    private String trailDescription;
-    private String location;
-    private String difficultyLevel; // Easy, Moderate, Hard
-    private double length; // in kilometers or miles
-    private double elevationGain; // in meters or feet
-    private double estimatedDuration; // in hours
-    private String trailType; // Loop, Out-and-back, etc.
-    private String seasonality; // Best season for the hike
-    private String trailConditions; // Trail conditions (rocky, muddy, etc.)
-    private String startingPoint;
-    private String endPoint;
-    private double trailRating; // Average rating
-    private List<String> photos; // List of URLs or paths to photos
-    private String trailMap; // URL or link to map
-    private List<String> completedBy; // Users who have completed the hike
-    private List<String> reviews; // Reviews by users
-    private String weatherConditions; // Typical or current weather
-    private boolean dogFriendly; // Whether dogs are allowed
+    private String elapsedTime;
+    private String trailName;
+    private String trailDifficultyStars;
+    private String trailRatingStars;
+    private float trailLength;
 
-    // Getters and Setters for each field
+    public Hike() {
+        hikeName = "myHike";
+        hikeDescription = "myHikeDescription";
+    }
+
+    public Hike(String hikeName, String hikeDescription) {
+        this.hikeName = hikeName;
+        this.hikeDescription = hikeDescription;
+    }
+
+    public String getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(String elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    public String getTrailName() {
+        return trailName;
+    }
+
+    public void setTrailName(String trailName) {
+        this.trailName = trailName;
+    }
+
+    public String getTrailDifficultyStars() {
+        return trailDifficultyStars;
+    }
+
+    public void setTrailDifficultyStars(String trailDifficultyStars) {
+        this.trailDifficultyStars = trailDifficultyStars;
+    }
+
+    public String getTrailRatingStars() {
+        return trailRatingStars;
+    }
+
+    public void setTrailRatingStars(String trailRatingStars) {
+        this.trailRatingStars = trailRatingStars;
+    }
+
+    public float getTrailLength() {
+        return trailLength;
+    }
+
+    public void setTrailLength(float trailLength) {
+        this.trailLength = trailLength;
+    }
 
     public String getHikeName() {
         return hikeName;
@@ -33,147 +69,18 @@ public class Hike {
         this.hikeName = hikeName;
     }
 
-    public String getTrailDescription() {
-        return trailDescription;
+    public String getHikeDescription() {
+        return hikeDescription;
     }
 
-    public void setTrailDescription(String trailDescription) {
-        this.trailDescription = trailDescription;
+    public void setHikeDescription(String hikeDescription) {
+        this.hikeDescription = hikeDescription;
     }
 
-    public String getLocation() {
-        return location;
+    public void printHikeDetails() {
+        System.out.println("Hike Name: " + hikeName);
+        System.out.println("Hike Description: " + hikeDescription);
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
-    public String getDifficultyLevel() {
-        return difficultyLevel;
-    }
-
-    public void setDifficultyLevel(String difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public void setLength(double length) {
-        this.length = length;
-    }
-
-    public double getElevationGain() {
-        return elevationGain;
-    }
-
-    public void setElevationGain(double elevationGain) {
-        this.elevationGain = elevationGain;
-    }
-
-    public double getEstimatedDuration() {
-        return estimatedDuration;
-    }
-
-    public void setEstimatedDuration(double estimatedDuration) {
-        this.estimatedDuration = estimatedDuration;
-    }
-
-    public String getTrailType() {
-        return trailType;
-    }
-
-    public void setTrailType(String trailType) {
-        this.trailType = trailType;
-    }
-
-    public String getSeasonality() {
-        return seasonality;
-    }
-
-    public void setSeasonality(String seasonality) {
-        this.seasonality = seasonality;
-    }
-
-    public String getTrailConditions() {
-        return trailConditions;
-    }
-
-    public void setTrailConditions(String trailConditions) {
-        this.trailConditions = trailConditions;
-    }
-
-    public String getStartingPoint() {
-        return startingPoint;
-    }
-
-    public void setStartingPoint(String startingPoint) {
-        this.startingPoint = startingPoint;
-    }
-
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
-    }
-
-    public double getTrailRating() {
-        return trailRating;
-    }
-
-    public void setTrailRating(double trailRating) {
-        this.trailRating = trailRating;
-    }
-
-    public List<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
-    }
-
-    public String getTrailMap() {
-        return trailMap;
-    }
-
-    public void setTrailMap(String trailMap) {
-        this.trailMap = trailMap;
-    }
-
-    public List<String> getCompletedBy() {
-        return completedBy;
-    }
-
-    public void setCompletedBy(List<String> completedBy) {
-        this.completedBy = completedBy;
-    }
-
-    public List<String> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<String> reviews) {
-        this.reviews = reviews;
-    }
-
-    public String getWeatherConditions() {
-        return weatherConditions;
-    }
-
-    public void setWeatherConditions(String weatherConditions) {
-        this.weatherConditions = weatherConditions;
-    }
-
-    public boolean isDogFriendly() {
-        return dogFriendly;
-    }
-
-    public void setDogFriendly(boolean dogFriendly) {
-        this.dogFriendly = dogFriendly;
-    }
 }
