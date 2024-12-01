@@ -35,5 +35,14 @@
     <string name="textHint">Click on the marker for more details</string>
     <string name="feedTest">FeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeed</string>
 
+    <string-array name="difficulty">
+        <item>Easy</item>
+        <item>Moderate</item>
+        <item>Hard</item>
+        <item>Extreme</item>
+        <item>Impossible</item>
+    </string-array>
 
+    <string name="shareHike"><u>Share Hike 📄</u></string>
 </resources>
+

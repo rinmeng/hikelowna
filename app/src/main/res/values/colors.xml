@@ -15,8 +15,9 @@
     <color name="gainsboro">#dfe0df</color>
     <color name="zoom_background">#EB810A</color>
     <color name="silver">#C5C9C5</color>
-
+    <color name="linkcolor">#006FFF</color>
     <color name="checked_color">#C5C9C5</color>
     <color name="unchecked_color">#dfe0df</color>
+
 
 </resources>

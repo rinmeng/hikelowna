@@ -57,7 +57,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     GoogleMap map;
     Button zoomInButton, zoomOutButton, locatedTrailButton, hikeInfoButton;
 
-
     Polyline currentPolyline;
     TextView mapMessage;
     ListView suggestionsListView;
@@ -71,11 +70,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     SearchView searcher;
     List<String> searchResults;
-    List<Integer> ratings;
 
     List<Trail> trails;
     ArrayAdapter<Trail> adapter;
-    float currentTrailRating = 0.0f;
 
     public MapFragment() {
         // Required empty public constructor
@@ -84,19 +81,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void fetchTrailRating(String trailName, TrailRatingCallback callback) {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference feedsRef = db.getReference("feeds");
-        ratings = new ArrayList<>();
 
-        feedsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (DataSnapshot snapshot : task.getResult().getChildren()) {
-                    Feed feed = snapshot.getValue(Feed.class);
-                    if (feed != null && feed.getHike().getTrailName().equals(trailName)) {
-                        ratings.add(feed.getHike().getTrailRating());
+        try {
+            feedsRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<Integer> ratings = new ArrayList<>(); // Initialize a new list for each call
+                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                        Feed feed = snapshot.getValue(Feed.class);
+                        if (feed != null && feed.getHike() != null && trailName.equals(feed.getHike().getTrailName())) {
+                            ratings.add(feed.getHike().getTrailRating());
+                        }
                     }
+                    callback.onRatingFetched(ratings);
                 }
-                callback.onRatingFetched(ratings);
-            }
-        });
+            });
+        } catch (Exception e) {
+            Log.e("FetchingRating", "Error fetching trail rating: " + e.getMessage());
+        }
     }
 
     private float calculateAverageRating(List<Integer> rtngs) {
@@ -110,9 +111,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return sum / rtngs.size();
     }
 
-    private void addAndSaveTrail(String name, String difficulty, float length, int estimatedTime, float rating) {
+    private void addAndSaveTrail(String name, int difficulty, float length, int estimatedTime, float averageRating) {
 
-        Trail trail = new Trail(name, difficulty, length, estimatedTime, calculateAverageRating(ratings));
+        Trail trail = new Trail(name, difficulty, length, estimatedTime, averageRating);
         List<LatLng> points = Trail.points(trail);
         if (!points.isEmpty()) {
             trail.setLatLng(points.get(0));
@@ -124,25 +125,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeTrails() {
-        trails = new ArrayList<>();
+        trails.clear();
         logSavedTrails();
 
-        initializeTrail("Apex Trail - To Paul's Tomb", "Moderate", 1.21f, 23);
-        initializeTrail("Paul's Tomb Trail", "Moderate", 2.33f, 46);
-        initializeTrail("Gordon Trail/Camelot Trail", "Easy", 1.13f, 22);
-        initializeTrail("Pavilion Trail", "Easy", 0.71f, 13);
-        initializeTrail("Apex Trail - East", "Hard", 2.70f, 54);
-        initializeTrail("Pine Trail - To Country Club Dr", "Easy", 0.89f, 17);
+        initializeTrail("Apex Trail - To Paul's Tomb", 2, 1.21f, 23);
+        initializeTrail("Paul's Tomb Trail", 2, 2.33f, 46);
+        initializeTrail("Gordon Trail/Camelot Trail", 1, 1.13f, 22);
+        initializeTrail("Pavilion Trail", 1, 0.71f, 13);
+        initializeTrail("Apex Trail - East", 3, 2.70f, 54);
+        initializeTrail("Pine Trail - To Country Club Dr", 1, 0.89f, 17);
 
         // Sort trails alphabetically for better usability
         Collections.sort(trails);
-
-        // Bind the trails to a ListView using an ArrayAdapter
-        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
-        suggestionsListView.setAdapter(adapter);
     }
 
-    private void initializeTrail(String trailName, String difficulty, float length, int estimatedTime) {
+    private void initializeTrail(String trailName, int difficulty, float length, int estimatedTime) {
         fetchTrailRating(trailName, ratings -> {
             addAndSaveTrail(trailName, difficulty, length, estimatedTime, calculateAverageRating(ratings));
             Log.d("Ratings", "Ratings for " + trailName + ": " + ratings);
@@ -152,6 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        trails = new ArrayList<>();
     }
 
     @Override
@@ -167,17 +165,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setZoomControls(); // Set up the zoom controls for the map
 
         // Handle marker click events
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                // Move camera to the clicked marker with a zoom level for search results
-                moveCameraTo(marker.getPosition(), searchZoom);
-                showMarkerPopup(marker, currentSelectedTrail); // Show a popup dialog with marker details
-                marker.showInfoWindow(); // Show the marker's info window
-                // Show the trail points
+        map.setOnMarkerClickListener(marker -> {
+            // Move camera to the clicked marker with a zoom level for search results
+            moveCameraTo(marker.getPosition(), searchZoom);
+            showMarkerPopup(marker, currentSelectedTrail); // Show a popup dialog with marker details
+            marker.showInfoWindow(); // Show the marker's info window
+            // Show the trail points
 
-                return true; // Consume the event to prevent default behavior
-            }
+            return true; // Consume the event to prevent default behavior
         });
     }
 
@@ -226,7 +221,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Inflate the reviews container layout
             View reviewsContainer = inflater.inflate(R.layout.reviews_container, null);
             Button btnBack = reviewsContainer.findViewById(R.id.btnBack);
-            TextView reviewMessage = reviewsContainer.findViewById(R.id.reviewMessage);
 
             // Fetch and populate the reviews
             fetchFeedsFromDatabase(reviewsContainer);
@@ -262,7 +256,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             Intent it = new Intent(getContext(), HikeActivity.class);
             it.putExtra("trailName", trail.getName());
-            it.putExtra("trailDifficultyStars", trail.getDifficultyStars());
+            it.putExtra("trailDifficulty", trail.getDifficulty());
             it.putExtra("trailRatingStars", trail.getRatingStars());
             it.putExtra("trailLength", trail.getLength());
             it.putExtra("trailEstimatedTime", trail.getEstimatedTime());
@@ -288,18 +282,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapMessage = rootView.findViewById(R.id.mapMessage);
         locatedTrailButton = rootView.findViewById(R.id.locatedTrailButton);
         hikeInfoButton = rootView.findViewById(R.id.hikeInfoButton);
-
-
-        initializeTrails();
-        suggestionsListView.setVisibility(View.GONE);
         searcher.setGravity(Gravity.CENTER);
         hikeInfoButton.setVisibility(View.GONE);
 
+        initializeTrails();
 
-        // Set up event handlers for the SearchView
+
+        // when user clicks search
         searcher.setOnSearchClickListener(v -> {
             suggestionsListView.setVisibility(View.VISIBLE);
             adapter.getFilter().filter(""); // Reset the filter to show all trails
+            Log.d("MapFragment", "Adapter values after search clicked: " + adapter.getCount());
             searcher.setBackgroundColor(requireContext().getResources().getColor(R.color.gainsboro, requireContext().getTheme()));
         });
 
@@ -310,36 +303,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return false; // Let the system handle additional close behavior
         });
 
-
-        hikeInfoButton.setOnClickListener(view -> {
-            // open the hike popup
-            try {
-                showMarkerPopup(currentMarker, currentSelectedTrail);
-            } catch (Exception e) {
-                Toast.makeText(getContext(), "No trail selected to view info", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
         // Handle changes in the SearchView text
         searcher.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return true; // Search is already handled by text change
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    // Show all trails if no search query is entered
                     adapter.getFilter().filter("");
                     suggestionsListView.setVisibility(View.VISIBLE);
                 } else {
-                    // Filter trails based on the query
-                    adapter.getFilter().filter(newText, count -> {
-                        // Show/hide suggestions based on the number of matches
-                        suggestionsListView.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-                    });
+                    adapter.getFilter().filter(newText, count ->
+                            suggestionsListView.setVisibility(count > 0 ? View.VISIBLE : View.GONE));
+
                 }
                 return true;
             }
@@ -366,6 +345,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .position(trailLatLng)
                         .title(selectedTrail.getName())
                         .snippet(selectedTrail.toStringShort()));
+                currentMarker = marker;
                 if (marker != null) {
                     moveCameraTo(trailLatLng, searchZoom);
                     marker.showInfoWindow();
@@ -373,6 +353,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
+        hikeInfoButton.setOnClickListener(view -> {
+            if (currentMarker != null) {
+                showMarkerPopup(currentMarker, currentSelectedTrail);
+            } else {
+                Toast.makeText(getContext(), "No trail selected to view info", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         // Set up the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
@@ -401,7 +391,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (suggestionsListView != null) {
             suggestionsListView.setVisibility(View.GONE);
         }
+        currentSelectedTrail = null;
+        currentMarker = null;
+        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
+        suggestionsListView.setAdapter(adapter);
+
     }
+
 
     private void fetchFeedsFromDatabase(View rootView) {
         List<Feed> feeds = new ArrayList<>();
@@ -422,9 +418,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void populateFeeds(View rootView, List<Feed> feeds) {
-        LinearLayout feedContainer = rootView.findViewById(R.id.reviewContainer);
-
         boolean isFound = false;
+        LinearLayout feedContainer = rootView.findViewById(R.id.reviewContainer);
 
         for (Feed feed : feeds) {
             if (feed.getHike().getTrailName().equals(currentSelectedTrail.getName())) {
@@ -451,7 +446,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 Hike feedHike = feed.getHike();
                 User feedPoster = feed.getPoster();
-                String username = "@" + feedPoster.getUsername();
+                String username = feedPoster.getDisplayName();
                 usernameText.setText(username);
                 String userDetail = feedPoster.getLocation() + " | " + feedPoster.getHikingHistory().size() + " hikes";
                 userDetailsText.setText(userDetail);
@@ -459,10 +454,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 userTrailInfoText.setText(userTrailInfo);
                 titleText.setText(feedHike.getHikeName());
                 descriptionText.setText(feedHike.getHikeDescription());
-                trailName.setText(feedHike.getTrailName());
-                String trailDetailsText = "★ " + getAverageRating(feeds) + " | " + feedHike.getTrailDifficultyStars()
-                        + " | " + feedHike.getTrailLength() + "km" + " | " + feedHike.getTrailEstimatedTime() + "mins";
-                trailDetails.setText(trailDetailsText);
+                trailName.setVisibility(View.GONE);
+                trailDetails.setVisibility(View.GONE);
 
                 feedContainer.addView(feedView);
             }
@@ -474,13 +467,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private float getAverageRating(List<Feed> feeds) {
-        float totalRating = 0;
-        for (Feed feed : feeds) {
-            totalRating += feed.getHike().getTrailRating();
-        }
-        return totalRating / feeds.size();
+    private void getAverageRatingForTrail(String trailName, HomeFragment.RatingCallback callback) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference feedsRef = db.getReference("feeds");
+
+        feedsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                float totalRating = 0;
+                int ratingCount = 0;
+                for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                    Feed feed = snapshot.getValue(Feed.class);
+                    if (feed != null && feed.getHike().getTrailName().equals(trailName)) {
+                        totalRating += feed.getHike().getTrailRating();
+                        ratingCount++;
+                    }
+                }
+                float averageRating = ratingCount > 0 ? totalRating / ratingCount : 0;
+                callback.onRatingCalculated(averageRating);
+            } else {
+                Log.e("HomeFragment", "Error fetching feeds", task.getException());
+            }
+        });
     }
+
 
     @Override
     public void onPause() {
@@ -608,51 +617,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-
-    //    private void saveTrailToLocal(Trail trail) {
-//        try {
-//            Gson gson = new Gson();
-//
-//            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("local_trails", Context.MODE_PRIVATE);
-//            String json = sharedPreferences.getString("trails", null);
-//
-//            Type type = new TypeToken<List<Trail>>() {
-//            }.getType();
-//            List<Trail> trailList;
-//
-//            if (json != null) {
-//                trailList = gson.fromJson(json, type);
-//                Log.d("SaveTrail", "Loaded existing trails: " + trailList.size());
-//            } else {
-//                trailList = new ArrayList<>();
-//                Log.d("SaveTrail", "Initialized new trail list.");
-//            }
-//
-//            boolean trailExists = false;
-//
-//            for (int i = 0; i < trailList.size(); i++) {
-//                if (trailList.get(i).getName().equalsIgnoreCase(trail.getName())) {
-//                    trailList.set(i, trail);
-//                    trailExists = true;
-//                    Log.d("SaveTrail", "Replaced existing trail: " + trail.getName());
-//                    break;
-//                }
-//            }
-//
-//            if (!trailExists) {
-//                trailList.add(trail);
-//                Log.d("SaveTrail", "Added new trail: " + trail.getName());
-//            }
-//
-//            String updatedJson = gson.toJson(trailList);
-//            boolean isSaved = sharedPreferences.edit().putString("trails", updatedJson).commit(); // Using commit()
-//            Log.d("SaveTrail", "SharedPreferences commit successful: " + isSaved);
-//
-//
-//        } catch (Exception e) {
-//            Log.e("SaveTrail", "Error saving Trail", e);
-//        }
-//    }
     private List<Trail> getSavedTrails() {
         Gson gson = new Gson();
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("local_trails", Context.MODE_PRIVATE);
@@ -677,6 +641,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         for (Trail trail : savedTrails) {
             Log.d("SavedTrails", "Trail: " + trail.getName() + ", Location: " + trail.getLatLng());
         }
+    }
+
+    interface RatingCallback {
+        void onRatingCalculated(float averageRating);
     }
 
     public interface TrailRatingCallback {

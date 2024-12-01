@@ -46,14 +46,14 @@ public class ReviewActivity extends AppCompatActivity {
 
         Intent it = getIntent();
         String trialName = it.getStringExtra("trailName");
-        String trailDifficultyStars = it.getStringExtra("trailDifficultyStars");
+        int trailDifficulty = it.getIntExtra("trailDifficulty", 0);
         String trailRatingStars = it.getStringExtra("trailRatingStars");
         float trailLength = it.getFloatExtra("trailLength", 0);
         int trailEstimatedTime = it.getIntExtra("trailEstimatedTime", 0);
         String elapsedTime = it.getStringExtra("elapsedTime");
 
         trailNameText.setText(trialName);
-        String trailDetails = trailDifficultyStars + " | "
+        String trailDetails = trailDifficulty + " | "
                 + " | " + trailLength + " km | \n" + trailEstimatedTime
                 + " minutes" + " | " + elapsedTime;
         trailDecscriptionText.setText(trailDetails);
@@ -74,7 +74,7 @@ public class ReviewActivity extends AppCompatActivity {
             Hike hike = new Hike(title, description);
             hike.setElapsedTime(elapsedTime);
             hike.setTrailName(trialName);
-            hike.setTrailDifficultyStars(trailDifficultyStars);
+            hike.setTrailDifficultyStars(trailDifficulty);
             hike.setTrailRating(rating);
             hike.setTrailLength(trailLength);
             hike.setTrailEstimatedTime(trailEstimatedTime);

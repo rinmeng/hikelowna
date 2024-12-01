@@ -17,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hikelowna.core.DataFetcher;
 import com.example.hikelowna.core.User;
 import com.example.hikelowna.core.UserManager;
 import com.example.hikelowna.ui.LandingPage;
@@ -144,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
                                 UserManager.isLoggedInOnce(true);
                                 startActivity(it);
 
+                                DataFetcher df = new DataFetcher();
+                                df.refetchAllData(foundUser);
+
                                 if (rememberMe) {
                                     saveUserToLocal(foundUser);
                                 } else {
@@ -268,6 +272,8 @@ public class MainActivity extends AppCompatActivity {
         int randomIndex = (int) (Math.random() * welcomeTexts.length);
         return welcomeTexts[randomIndex] + " Welcome back.";
     }
+
+
 }
 
 

@@ -83,7 +83,7 @@ public class User implements Serializable {
                 "   username = " + (username != null ? username : "null") + "\n" +
                 "   displayName = " + (displayName != null ? displayName : "null") + "\n" +
                 "   password = " + (passwordHash != null ? passwordHash : "null") + "\n" +
-                "   location =" + (location != null ? location : "null") + "\n" +
+                "   location = " + (location != null ? location : "null") + "\n" +
                 "   preferredDifficultyLevel = " + (preferredDifficultyLevel != null ? preferredDifficultyLevel : "null") + "\n" +
                 "   hikingHistory = " + (hikingHistory != null ? hikingHistory.toString() : "null");
 

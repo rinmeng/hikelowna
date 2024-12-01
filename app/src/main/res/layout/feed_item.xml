@@ -14,7 +14,7 @@
         android:id="@+id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/nexaheavy"
         android:paddingHorizontal="20dp"
         android:text="Poster/User"
@@ -22,7 +22,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/trailDetails" />
 
     <TextView
         android:id="@+id/userDetailsText"
@@ -41,23 +41,23 @@
         android:id="@+id/trailName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:fontFamily="@font/nexaheavy"
-        android:paddingHorizontal="20dp"
+        android:paddingHorizontal="15dp"
         android:text="Apex Trail - East"
         android:textAlignment="textStart"
         android:textColor="@color/darkslategrey"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/descriptionText"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/userTrailInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nexalight"
-        android:paddingHorizontal="20dp"
+        android:paddingHorizontal="15dp"
         android:text="★ 5 | Time Elapsed: 00:00:00 | "
         android:textAlignment="textStart"
         android:textColor="@color/darkslategrey"
@@ -75,14 +75,14 @@
         android:textAlignment="textStart"
         android:textColor="@color/darkslategrey"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@+id/trailName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trailName" />
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:fontFamily="@font/nexaheavy"
         android:paddingHorizontal="20dp"
         android:text="Feed TitleFeed TitleFeed TitleFeed TitleFeed TitleFeed Title"
@@ -105,6 +105,20 @@
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/titleText"
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <Button
+        android:id="@+id/shareHikeButton"
+        android:layout_width="75dp"
+        android:layout_height="25dp"
+        android:layout_margin="0dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/nexaheavy"
+        android:padding="0dp"
+        android:text="@string/shareHike"
+        android:textColor="@color/linkcolor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
