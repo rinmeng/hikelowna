@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.hikelowna.R;
@@ -28,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -75,51 +73,8 @@ public class HomeFragment extends Fragment {
                 if (code.isEmpty()) {
                     Toast.makeText(getContext(), "Please enter a shared hike code!", Toast.LENGTH_SHORT).show();
                     return;
-                }else{
-                   try { // add a dialog popup using layout feed_item.xml to display the hike details
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                        View sharedHikeView = getLayoutInflater().inflate(R.layout.feed_item, null);
-                        builder1.setView(sharedHikeView);
-                        AlertDialog dialog1 = builder1.create();
-                        HikeData hd = new HikeData();
-                        Hike sharedHike = hd.translateHikeCodeToHike(code);
-
-                        TextView usernameTextHike = sharedHikeView.findViewById(R.id.usernameText);
-                        TextView userDetailsText = sharedHikeView.findViewById(R.id.userDetailsText);
-                        TextView trailName = sharedHikeView.findViewById(R.id.trailName);
-                        TextView userTrailInfoText = sharedHikeView.findViewById(R.id.userTrailInfoText);
-                        TextView trailDetails = sharedHikeView.findViewById(R.id.trailDetails);
-                        TextView titleText = sharedHikeView.findViewById(R.id.titleText);
-                        TextView descriptionText = sharedHikeView.findViewById(R.id.descriptionText);
-
-                        Button shareHikeButton = sharedHikeView.findViewById(R.id.shareHikeButton);
-                        shareHikeButton.setText("Back");
-                        shareHikeButton.setTextSize(15);
-                        shareHikeButton.setBackgroundResource(0);
-
-
-                        shareHikeButton.setOnClickListener(v3 -> dialog1.dismiss());
-
-                        usernameTextHike.setVisibility(View.GONE);
-                        userDetailsText.setVisibility(View.GONE);
-                        String userTrailInfo = "★ " + sharedHike.getTrailRating() + " | " + "Time Elapsed: " + sharedHike.getElapsedTime();
-                        userTrailInfoText.setText(userTrailInfo);
-                        titleText.setText(sharedHike.getHikeName());
-                        descriptionText.setText(sharedHike.getHikeDescription());
-                        trailName.setText(sharedHike.getTrailName());
-                        getAverageRatingForTrail(sharedHike.getTrailName(), averageRating -> {
-                            String trailDetailsText = String.format(Locale.getDefault(), "★ %.2f | %s | %.1f km | %s mins",
-                                    averageRating,
-                                    TrailDifficulty.toStars(sharedHike.getTrailDifficultyStars()),
-                                    sharedHike.getTrailLength(),
-                                    sharedHike.getTrailEstimatedTime());
-                            trailDetails.setText(trailDetailsText);
-                        });
-
-                        dialog1.show();
-                    }catch (Exception e){
-                        Toast.makeText(getContext(), "Invalid shared hike code!", Toast.LENGTH_SHORT).show();
-                    }
+                } else {
+                    showHikeDetailsDialog(code);
                 }
 
                 // close the dialog
@@ -128,6 +83,65 @@ public class HomeFragment extends Fragment {
             dialog.show();
         });
         return rootView;
+    }
+
+    private void showHikeDetailsDialog(String code) {
+        try {
+            HikeData hd = new HikeData();
+            Hike sharedHike = hd.translateHikeCodeToHike(code);
+            showHikeDialog(sharedHike, null, null);
+        } catch (Exception e) {
+            showHikeDialog(null, "Invalid Hike Code!", "Please enter a valid hike code.");
+        }
+    }
+
+    private void showHikeDialog(Hike sharedHike, String errorMessage, String errorDescription) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        View sharedHikeView = getLayoutInflater().inflate(R.layout.feed_item, null);
+        builder1.setView(sharedHikeView);
+        AlertDialog dialog1 = builder1.create();
+
+        TextView usernameTextHike = sharedHikeView.findViewById(R.id.username);
+        TextView userDetailsText = sharedHikeView.findViewById(R.id.userDetailsText);
+        TextView trailName = sharedHikeView.findViewById(R.id.trailName);
+        TextView userTrailInfoText = sharedHikeView.findViewById(R.id.userTrailInfoText);
+        TextView trailDetails = sharedHikeView.findViewById(R.id.trailDetails);
+        TextView titleText = sharedHikeView.findViewById(R.id.titleText);
+        TextView descriptionText = sharedHikeView.findViewById(R.id.descriptionText);
+        Button shareHikeButton = sharedHikeView.findViewById(R.id.shareHikeButton);
+
+        if (sharedHike != null) {
+            usernameTextHike.setVisibility(View.GONE);
+            userDetailsText.setVisibility(View.GONE);
+            String userTrailInfo = "★ " + sharedHike.getTrailRating() + " | " + "Time Elapsed: " + sharedHike.getElapsedTime();
+            userTrailInfoText.setText(userTrailInfo);
+            titleText.setText(sharedHike.getHikeName());
+            descriptionText.setText(sharedHike.getHikeDescription());
+            trailName.setText(sharedHike.getTrailName());
+            getAverageRatingForTrail(sharedHike.getTrailName(), averageRating -> {
+                String trailDetailsText = String.format(Locale.getDefault(), "★ %.2f | %s | %.1f km | %s mins",
+                        averageRating,
+                        TrailDifficulty.toStars(sharedHike.getTrailDifficultyStars()),
+                        sharedHike.getTrailLength(),
+                        sharedHike.getTrailEstimatedTime());
+                trailDetails.setText(trailDetailsText);
+            });
+        } else {
+            usernameTextHike.setText(errorMessage);
+            userDetailsText.setText(errorDescription);
+            trailName.setVisibility(View.GONE);
+            userTrailInfoText.setVisibility(View.GONE);
+            trailDetails.setVisibility(View.GONE);
+            titleText.setVisibility(View.GONE);
+            descriptionText.setVisibility(View.GONE);
+        }
+
+        shareHikeButton.setText("Back");
+        shareHikeButton.setTextSize(15);
+        shareHikeButton.setBackgroundResource(0);
+        shareHikeButton.setOnClickListener(v3 -> dialog1.dismiss());
+
+        dialog1.show();
     }
 
     private void fetchFeedsFromDatabase(View rootView) {
@@ -147,7 +161,6 @@ public class HomeFragment extends Fragment {
                         Log.d("Feed", feed.toString());
                     }
                 }
-
 
 
                 populateFeeds(rootView, feeds);
@@ -181,7 +194,7 @@ public class HomeFragment extends Fragment {
             }
             feedView.setLayoutParams(layoutParams);
 
-            TextView usernameText = feedView.findViewById(R.id.usernameText);
+            TextView usernameText = feedView.findViewById(R.id.username);
             TextView userDetailsText = feedView.findViewById(R.id.userDetailsText);
             TextView trailName = feedView.findViewById(R.id.trailName);
             TextView userTrailInfoText = feedView.findViewById(R.id.userTrailInfoText);
@@ -211,7 +224,7 @@ public class HomeFragment extends Fragment {
 
             feedShareHikeButton.setOnClickListener(v -> {
                 HikeData hd = new HikeData();
-                String sharedHikeCode = hd.createHikeCode(feed);
+                String sharedHikeCode = hd.createHikeCode(feed.getHike());
                 HikeData.copyShareCodeToClipboard(getContext(), sharedHikeCode);
                 Toast.makeText(getContext(), "Hike code copied to clipboard!", Toast.LENGTH_SHORT).show();
             });

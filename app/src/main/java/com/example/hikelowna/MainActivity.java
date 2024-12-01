@@ -2,7 +2,6 @@ package com.example.hikelowna;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -63,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         welcomeText.setText(getWelcomeText());
 
         // Working on Register Button soon
-        registerButton.setEnabled(false);
-        registerButton.setTextColor(Color.GRAY);
+
 
         // Determine if user was remembered last time, and compare it to the user on the userRef, if they mismatch then
         // Alert user that their password was changed
@@ -82,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+
         }
 
         loginButton.setOnClickListener(view -> {
@@ -105,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        User userFromUserManager = UserManager.getInstance().getCurrentUser();
+        if (userFromUserManager != null) {
+            usernameInput.setText(userFromUserManager.getUsername());
+            passwordInput.setText(userFromUserManager.getPasswordHash());
+            rememberMeInput.setChecked(true);
+        }
+    }
 
     private void validateUser(DatabaseReference userRef, String usr, String psw, boolean rememberMe) {
 

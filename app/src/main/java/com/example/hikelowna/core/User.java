@@ -28,6 +28,16 @@ public class User implements Serializable {
         hikingHistory = new ArrayList<>();
     }
 
+    public User(String username, String passwordHash, String displayName, String location, String preferredDifficultyLevel) {
+        setUsername(username);
+        setDisplayName(displayName);
+        setPasswordHash(passwordHash);
+        setLocation(location);
+        setPreferredDifficultyLevel(preferredDifficultyLevel);
+        // Initialize all lists
+        hikingHistory = new ArrayList<>();
+    }
+
     public void addHikeToHistory(Hike hike) {
         hikingHistory.add(hike);
     }

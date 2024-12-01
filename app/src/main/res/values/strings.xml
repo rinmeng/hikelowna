@@ -43,6 +43,14 @@
         <item>Impossible</item>
     </string-array>
 
+    <string-array name="filterOption">
+        <item>Name</item>
+        <item>Rating</item>
+        <item>Difficulty</item>
+        <item>Length</item>
+        <item>Estimated Time</item>
+    </string-array>
+
     <string name="shareHike"><u>Share Hike 📄</u></string>
 </resources>
 

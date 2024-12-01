@@ -44,6 +44,8 @@ public class ProfileFragment extends Fragment {
     Button editButton, logoutButton;
     Spinner preferredDifficulty;
 
+    TextView hikingHistoryMessage;
+
     LinearLayout hikingHistoryLayout;
 
     boolean isEditing = true;
@@ -63,18 +65,19 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        username = rootView.findViewById(R.id.usernameText);
-        displayName = rootView.findViewById(R.id.userDisplayNameText);
-        location = rootView.findViewById(R.id.locationText);
+        username = rootView.findViewById(R.id.username);
+        displayName = rootView.findViewById(R.id.displayName);
+        location = rootView.findViewById(R.id.location);
 
         editButton = rootView.findViewById(R.id.editButton);
         logoutButton = rootView.findViewById(R.id.logoutButton);
         hikingHistoryLayout = rootView.findViewById(R.id.hikingHistoryLayout);
+        hikingHistoryMessage = rootView.findViewById(R.id.hikingHistoryMessage);
 
-        preferredDifficulty = rootView.findViewById(R.id.preferredDifficultyText);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        preferredDifficulty = rootView.findViewById(R.id.preferredDifficultyLevel);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.difficulty, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         preferredDifficulty.setAdapter(adapter);
 
         UserManager userManager = UserManager.getInstance();
@@ -98,6 +101,12 @@ public class ProfileFragment extends Fragment {
         // set the user's hiking history
         List<Hike> userHikingHistory = getUserHikingHistory(user);
 
+        if (userHikingHistory.isEmpty()) {
+            hikingHistoryMessage.setVisibility(View.VISIBLE);
+        } else {
+            hikingHistoryMessage.setVisibility(View.GONE);
+        }
+
         // populate the user's hiking history
         for (Hike hike : userHikingHistory) {
             View hikeView = inflater.inflate(R.layout.feed_item, hikingHistoryLayout, false);
@@ -110,7 +119,7 @@ public class ProfileFragment extends Fragment {
             hikeView.setLayoutParams(layoutParams);
 
 
-            TextView usernameTextHike = hikeView.findViewById(R.id.usernameText);
+            TextView usernameTextHike = hikeView.findViewById(R.id.username);
             TextView userDetailsText = hikeView.findViewById(R.id.userDetailsText);
             TextView trailName = hikeView.findViewById(R.id.trailName);
             TextView userTrailInfoText = hikeView.findViewById(R.id.userTrailInfoText);

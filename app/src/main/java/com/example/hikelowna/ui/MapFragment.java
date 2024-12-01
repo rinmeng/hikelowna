@@ -15,7 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +49,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +60,7 @@ import java.util.List;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     GoogleMap map;
-    Button zoomInButton, zoomOutButton, locatedTrailButton, hikeInfoButton;
+    Button zoomInButton, zoomOutButton, locatedTrailButton, hikeInfoButton, filterButton;
 
     Polyline currentPolyline;
     TextView mapMessage;
@@ -65,6 +70,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     Trail currentSelectedTrail;
     List<LatLng> trailPoints;
 
+    boolean isAscending = false;
+    String selectedFilter = "Name";
+
 
     Marker currentMarker;
 
@@ -73,6 +81,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     List<Trail> trails;
     ArrayAdapter<Trail> adapter;
+    ArrayAdapter<CharSequence> filterAdapter;
 
     public MapFragment() {
         // Required empty public constructor
@@ -128,15 +137,102 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         trails.clear();
         logSavedTrails();
 
-        initializeTrail("Apex Trail - To Paul's Tomb", 2, 1.21f, 23);
-        initializeTrail("Paul's Tomb Trail", 2, 2.33f, 46);
-        initializeTrail("Gordon Trail/Camelot Trail", 1, 1.13f, 22);
-        initializeTrail("Pavilion Trail", 1, 0.71f, 13);
-        initializeTrail("Apex Trail - East", 3, 2.70f, 54);
-        initializeTrail("Pine Trail - To Country Club Dr", 1, 0.89f, 17);
+        // Create a list to track initialization progress
+        List<String> trailNames = Arrays.asList(
+                "Apex Trail - To Paul's Tomb",
+                "Paul's Tomb Trail",
+                "Gordon Trail/Camelot Trail",
+                "Pavilion Trail",
+                "Apex Trail - East",
+                "Pine Trail - To Country Club Dr"
+        );
 
-        // Sort trails alphabetically for better usability
-        Collections.sort(trails);
+        // Track how many trails have been processed
+        AtomicInteger processedTrails = new AtomicInteger(0);
+
+        for (String trailName : trailNames) {
+            fetchTrailRating(trailName, ratings -> {
+                // Determine difficulty, length, and estimated time based on trail name
+                int difficulty = getDifficultyForTrail(trailName);
+                float length = getLengthForTrail(trailName);
+                int estimatedTime = getEstimatedTimeForTrail(trailName);
+
+                addAndSaveTrail(trailName, difficulty, length, estimatedTime, calculateAverageRating(ratings));
+                Log.d("Ratings", "Ratings for " + trailName + ": " + ratings);
+
+                // Increment processed trails
+                int processed = processedTrails.incrementAndGet();
+
+                // If all trails have been processed, sort the list
+                if (processed == trailNames.size()) {
+                    trails.sort(Comparator.comparing(Trail::getName, String::compareToIgnoreCase));
+
+                    // Update the adapter if it exists
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            if (adapter != null) {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    // Helper methods to get trail details
+    private int getDifficultyForTrail(String trailName) {
+        switch (trailName) {
+            case "Apex Trail - To Paul's Tomb":
+            case "Paul's Tomb Trail":
+                return 2;
+            case "Gordon Trail/Camelot Trail":
+            case "Pavilion Trail":
+            case "Pine Trail - To Country Club Dr":
+                return 1;
+            case "Apex Trail - East":
+                return 3;
+            default:
+                return 1;
+        }
+    }
+
+    private float getLengthForTrail(String trailName) {
+        switch (trailName) {
+            case "Apex Trail - To Paul's Tomb":
+                return 1.21f;
+            case "Paul's Tomb Trail":
+                return 2.33f;
+            case "Gordon Trail/Camelot Trail":
+                return 1.13f;
+            case "Pavilion Trail":
+                return 0.71f;
+            case "Apex Trail - East":
+                return 2.70f;
+            case "Pine Trail - To Country Club Dr":
+                return 0.89f;
+            default:
+                return 1.0f;
+        }
+    }
+
+    private int getEstimatedTimeForTrail(String trailName) {
+        switch (trailName) {
+            case "Apex Trail - To Paul's Tomb":
+                return 23;
+            case "Paul's Tomb Trail":
+                return 46;
+            case "Gordon Trail/Camelot Trail":
+                return 22;
+            case "Pavilion Trail":
+                return 13;
+            case "Apex Trail - East":
+                return 54;
+            case "Pine Trail - To Country Club Dr":
+                return 17;
+            default:
+                return 30;
+        }
     }
 
     private void initializeTrail(String trailName, int difficulty, float length, int estimatedTime) {
@@ -284,12 +380,64 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         hikeInfoButton = rootView.findViewById(R.id.hikeInfoButton);
         searcher.setGravity(Gravity.CENTER);
         hikeInfoButton.setVisibility(View.GONE);
+        filterButton = rootView.findViewById(R.id.filterButton);
 
         initializeTrails();
+
+        filterButton.setVisibility(View.GONE);
+
+        filterButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            View filterView = inflater.inflate(R.layout.filter_dialog, null);
+            builder.setView(filterView);
+            AlertDialog dialog = builder.create();
+
+            Spinner filterSpinner = filterView.findViewById(R.id.filterSpinner);
+            RadioGroup ascDscGroup = filterView.findViewById(R.id.ascDscGroup);
+            Button applyFilterButton = filterView.findViewById(R.id.applyFilterButton);
+
+            // Use CharSequence adapter for the spinner
+            filterAdapter = ArrayAdapter.createFromResource(requireContext(),
+                    R.array.filterOption, R.layout.spinner_item);
+            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            filterSpinner.setAdapter(filterAdapter);
+
+            // Set the current filter as the default selected item in the spinner
+            int currentFilterIndex = filterAdapter.getPosition(selectedFilter);
+            filterSpinner.setSelection(currentFilterIndex);
+
+            // Set the current sort order radio button
+            RadioButton ascButton = filterView.findViewById(R.id.ascButton);
+            RadioButton descButton = filterView.findViewById(R.id.dscButton);
+            if (isAscending) {
+                ascButton.setChecked(true);
+            } else {
+                descButton.setChecked(true);
+            }
+
+            applyFilterButton.setOnClickListener(v -> {
+                selectedFilter = filterSpinner.getSelectedItem().toString();
+                int checkedId = ascDscGroup.getCheckedRadioButtonId();
+                isAscending = checkedId == R.id.ascButton;
+
+                // Apply the filter to the trails list
+                trails = filterListBy(selectedFilter, isAscending, trails);
+
+                // Update the adapter for suggestionsListView
+                adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
+                suggestionsListView.setAdapter(adapter);
+
+                Log.d("Filter", "Selected filter: " + selectedFilter + ", isAscending: " + isAscending);
+                dialog.dismiss();
+            });
+
+            dialog.show();
+        });
 
 
         // when user clicks search
         searcher.setOnSearchClickListener(v -> {
+            filterButton.setVisibility(View.VISIBLE);
             suggestionsListView.setVisibility(View.VISIBLE);
             adapter.getFilter().filter(""); // Reset the filter to show all trails
             Log.d("MapFragment", "Adapter values after search clicked: " + adapter.getCount());
@@ -297,7 +445,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         searcher.setOnCloseListener(() -> {
-            // Hide the suggestions list when the search bar is closed
+            filterButton.setVisibility(View.GONE);
             suggestionsListView.setVisibility(View.GONE);
             searcher.setBackgroundColor(requireContext().getResources().getColor(android.R.color.transparent, requireContext().getTheme()));
             return false; // Let the system handle additional close behavior
@@ -384,9 +532,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         suggestionsListView.setVisibility(View.GONE);
     }
 
+    private List<Trail> filterListBy(String filter, boolean isAscending, List<Trail> trails) {
+        List<Trail> filteredList = new ArrayList<>(trails);
+        Comparator<Trail> comparator = null;
+
+        switch (filter) {
+            case "Name":
+                comparator = Comparator.comparing(Trail::getName, String::compareToIgnoreCase);
+                break;
+            case "Difficulty":
+                comparator = Comparator.comparingInt(Trail::getDifficulty);
+                break;
+            case "Length":
+                comparator = Comparator.comparing(Trail::getLength);
+                break;
+            case "Rating":
+                comparator = Comparator.comparing(Trail::getRating);
+                break;
+            case "Estimated Time":
+                comparator = Comparator.comparingInt(Trail::getEstimatedTime);
+                break;
+        }
+
+        if (comparator != null) {
+            if (!isAscending) {
+                comparator = comparator.reversed();
+            }
+            filteredList.sort(comparator);
+        }
+
+        return filteredList;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+
+        trails.sort(Comparator.comparing(Trail::getName, String::compareToIgnoreCase));
+        // print the trails
+        for (Trail t : trails) {
+            Log.d("Trail", t.toString());
+        }
         // Ensure the suggestionsListView is hidden whenever the fragment resumes
         if (suggestionsListView != null) {
             suggestionsListView.setVisibility(View.GONE);
@@ -436,7 +622,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 feedView.setLayoutParams(layoutParams);
 
-                TextView usernameText = feedView.findViewById(R.id.usernameText);
+                TextView usernameText = feedView.findViewById(R.id.username);
                 TextView userDetailsText = feedView.findViewById(R.id.userDetailsText);
                 TextView trailName = feedView.findViewById(R.id.trailName);
                 TextView userTrailInfoText = feedView.findViewById(R.id.userTrailInfoText);

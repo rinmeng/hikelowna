@@ -5,6 +5,230 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    android:background="@color/gainsboro"
+    tools:context=".ui.RegisterActivity">
+
+    <!-- Banner View -->
+    <View
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/gradient_top_fade_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TextView positioned on top of the banner -->
+
+
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="-60dp"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="Register"
+        android:textAlignment="center"
+        android:textColor="@color/darkslategrey"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/banner"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/displayName"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:hint="e.g. Hike Lover"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userDisplayNameTextView" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:fontFamily="@font/nexalight"
+        android:hint="e.g. hikelover123"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+    <Spinner
+        android:id="@+id/preferredDifficultyLevel"
+        android:layout_width="325dp"
+        android:layout_height="47dp"
+        android:fontFamily="@font/nexalight"
+        android:spinnerMode="dropdown"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/location"
+        app:layout_constraintTop_toBottomOf="@+id/preferredDiffucultyTextView" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:hint="eg. Kelowna"
+        android:maxLength="20"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:hint=""
+        android:inputType="textPassword"
+        android:maxLength="20"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/displayName"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Register →"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferredDifficultyLevel" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+
+        android:fontFamily="@font/nexaheavy"
+        android:text="← Back"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/welcomeText"
+        app:layout_constraintStart_toStartOf="@+id/banner"
+        app:layout_constraintTop_toTopOf="@+id/welcomeText"
+        app:layout_constraintVertical_bias="0.555" />
+
+    <TextView
+        android:id="@+id/userDisplayNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Display Name"
+        app:layout_constraintStart_toStartOf="@+id/usernameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="52dp"
+        android:fontFamily="@font/nexaheavy"
+        android:maxLength="20"
+        android:text="Username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
+
+    <TextView
+        android:id="@+id/limitText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:fontFamily="@font/nexalight"
+        android:maxLength="20"
+        android:text="(max 20)"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/usernameTextView"
+        app:layout_constraintStart_toEndOf="@+id/usernameTextView"
+        app:layout_constraintTop_toTopOf="@+id/usernameTextView" />
+
+    <TextView
+        android:id="@+id/limitText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/nexalight"
+        android:maxLength="20"
+        android:text="(max 50)"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/userDisplayNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/userDisplayNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/userDisplayNameTextView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/limitText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/nexalight"
+        android:maxLength="20"
+        android:text="(max 20)"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/locationTextView"
+        app:layout_constraintStart_toEndOf="@+id/locationTextView"
+        app:layout_constraintTop_toTopOf="@+id/locationTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/atText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="\@"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/username"
+        app:layout_constraintEnd_toStartOf="@+id/username"
+        app:layout_constraintTop_toTopOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/locationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Location"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextView"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
+        android:id="@+id/passwordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Password"
+        app:layout_constraintStart_toStartOf="@+id/userDisplayNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/displayName" />
+
+    <TextView
+        android:id="@+id/preferredDiffucultyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Preferred Difficulty"
+        app:layout_constraintStart_toStartOf="@+id/locationTextView"
+        app:layout_constraintTop_toBottomOf="@+id/location" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:background="@color/silver"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/trailName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="15dp"
+        android:text="Filter Hike By"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/applyFilterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Apply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ascDscGroup" />
+
+    <Spinner
+        android:id="@+id/filterSpinner"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trailName" />
+
+    <RadioGroup
+        android:id="@+id/ascDscGroup"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterSpinner">
+
+        <RadioButton
+            android:id="@+id/dscButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:checked="true"
+            android:fontFamily="@font/nexaheavy"
+            android:paddingHorizontal="10dp"
+            android:text="Descending" />
+
+        <RadioButton
+            android:id="@+id/ascButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginHorizontal="10dp"
+            android:fontFamily="@font/nexaheavy"
+            android:paddingHorizontal="10dp"
+            android:text="Ascending" />
+    </RadioGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

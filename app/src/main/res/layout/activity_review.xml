@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:fontFamily="@font/nexaheavy"
-        android:text="(max 20)"
+        android:text="(max 35)"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="@+id/titleText"
         app:layout_constraintStart_toEndOf="@+id/titleText"
@@ -115,7 +115,7 @@
         android:fontFamily="@font/nexalight"
         android:hint="e.g. My favourite hike..."
         android:inputType="text"
-        android:maxLength="20"
+        android:maxLength="35"
         android:textColor="@color/gainsboro"
         android:textColorHint="@color/silver"
         app:layout_constraintStart_toStartOf="@+id/titleText"
@@ -123,13 +123,13 @@
 
     <EditText
         android:id="@+id/descriptionInput"
-        android:layout_width="wrap_content"
+        android:layout_width="325dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:fontFamily="@font/nexalight"
         android:hint="e.g. I went with my friends and we had a great time..."
         android:inputType="textMultiLine"
-        android:maxLength="50"
+        android:maxLength="100"
         android:textColor="@color/gainsboro"
         android:textColorHint="@color/silver"
         app:layout_constraintStart_toStartOf="@+id/descriptionText"
@@ -141,7 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:fontFamily="@font/nexaheavy"
-        android:text="(max 50)"
+        android:text="(max 100)"
         android:textColor="@color/gray"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
@@ -168,11 +168,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/nexaheavy"
-        android:text="Rating (1 for worst, 5 for best)"
+        android:text="Rating"
         android:textColor="@color/gainsboro"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/descriptionInput"
         app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+
+    <TextView
+        android:id="@+id/charLimitText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="(👎 → 👍)"
+        android:textColor="@color/gray"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingText"
+        app:layout_constraintStart_toEndOf="@+id/ratingText"
+        app:layout_constraintTop_toTopOf="@+id/ratingText" />
 
     <RadioGroup
         android:id="@+id/ratingRadioGroup"
@@ -265,7 +278,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/nexaheavy"
             android:paddingHorizontal="10dp"
-            android:text="Save to History &amp; Post to Feed"
+            android:text="Save to History &amp; Post to Feed + Hike Reviews"
             android:textColor="@color/gainsboro" />
     </RadioGroup>
 

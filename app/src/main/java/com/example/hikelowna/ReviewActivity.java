@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hikelowna.core.Feed;
 import com.example.hikelowna.core.Hike;
+import com.example.hikelowna.core.TrailDifficulty;
 import com.example.hikelowna.core.UserManager;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -53,7 +54,7 @@ public class ReviewActivity extends AppCompatActivity {
         String elapsedTime = it.getStringExtra("elapsedTime");
 
         trailNameText.setText(trialName);
-        String trailDetails = trailDifficulty + " | "
+        String trailDetails = TrailDifficulty.toStars(trailDifficulty)
                 + " | " + trailLength + " km | \n" + trailEstimatedTime
                 + " minutes" + " | " + elapsedTime;
         trailDecscriptionText.setText(trailDetails);

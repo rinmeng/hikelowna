@@ -8,15 +8,16 @@
     tools:context=".ui.MapFragment">
 
     <!-- Google Map Fragment Container -->
+
+    <!-- Top banner with gradient background -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="331dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
-    <!-- Top banner with gradient background -->
     <View
         android:id="@+id/banner"
         android:layout_width="match_parent"
@@ -139,6 +140,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="@dimen/button_filter_size"
+        android:layout_height="@dimen/button_filter_size"
+        android:layout_marginVertical="0dp"
+        android:layout_marginStart="@dimen/button_spacing_x_map"
+        android:background="@drawable/filter_foreground"
+        app:layout_constraintStart_toStartOf="@+id/verticalGuidelineRight"
+        app:layout_constraintTop_toBottomOf="@+id/banner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

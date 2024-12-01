@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hikelowna.core.TrailDifficulty;
+
 public class HikeActivity extends AppCompatActivity {
     TextView hikeTitle, hikeDetails, hikeTimer, hikeTimerInfo, hikeLengthText, hikeEstimatedTimeText;
     Button finishHikeButton, pauseHikeButton;
@@ -55,7 +57,7 @@ public class HikeActivity extends AppCompatActivity {
         // Set trail information
         if (trialName != null) {
             hikeTitle.setText(trialName);
-            String trailDetails = trailRatingStars + separator + trailDifficulty;
+            String trailDetails = trailRatingStars + separator + TrailDifficulty.toStars(trailDifficulty);
             hikeDetails.setText(trailDetails);
             hikeLengthText.setText(String.format("%.2f km", trailLength));
             hikeEstimatedTimeText.setText(trailEstimatedTime + " minutes");

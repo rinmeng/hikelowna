@@ -11,10 +11,9 @@
 
 
     <TextView
-        android:id="@+id/usernameText"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:fontFamily="@font/nexaheavy"
         android:paddingHorizontal="20dp"
         android:text="Poster/User"
@@ -22,7 +21,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trailDetails" />
+        app:layout_constraintTop_toBottomOf="@+id/seperator2" />
 
     <TextView
         android:id="@+id/userDetailsText"
@@ -34,8 +33,8 @@
         android:textAlignment="textStart"
         android:textColor="@color/darkslategrey"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@+id/usernameText"
-        app:layout_constraintTop_toBottomOf="@+id/usernameText" />
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/trailName"
@@ -80,6 +79,21 @@
         app:layout_constraintTop_toBottomOf="@+id/trailName" />
 
     <TextView
+        android:id="@+id/seperator2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="-"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trailDetails" />
+
+    <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,9 +102,24 @@
         android:text="Feed TitleFeed TitleFeed TitleFeed TitleFeed TitleFeed Title"
         android:textAlignment="textStart"
         android:textColor="@color/darkslategrey"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/userTrailInfoText"
+        app:layout_constraintTop_toBottomOf="@+id/seperator" />
+
+    <TextView
+        android:id="@+id/seperator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="-"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userTrailInfoText" />
 
     <TextView
