@@ -140,9 +140,8 @@ public class ProfileFragment extends Fragment {
             shareHikeButton.setOnClickListener(view -> {
                 HikeData hd = new HikeData();
                 String hikeCode = hd.createHikeCode(hike);
-                Log.d("HikeCode", hikeCode);
-                String translatedHike = hd.translateHikeCode(hike);
-                Log.d("TranslatedHike", translatedHike);
+                HikeData.copyShareCodeToClipboard(getContext(), hikeCode);
+                Toast.makeText(getContext(), "Share code copied!", Toast.LENGTH_SHORT).show();
             });
 
             hikingHistoryLayout.addView(hikeView);

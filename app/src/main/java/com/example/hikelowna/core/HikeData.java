@@ -22,9 +22,23 @@ package com.example.hikelowna.core;
 //    private String location;
 //    private String preferredDifficultyLevel;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+
 import java.security.MessageDigest;
 
 public class HikeData {
+    
+
+    public static void copyShareCodeToClipboard(Context context, String shareCode) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if (clipboard != null) {
+            ClipData clip = ClipData.newPlainText("Hike Share Code", shareCode);
+            clipboard.setPrimaryClip(clip);
+        }
+    }
 
     // Combines all string fields of a Hike object into a single string
     public String translateHikeCode(Hike hike) {
