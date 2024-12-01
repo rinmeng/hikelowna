@@ -33,6 +33,24 @@
     <string name="hikeEstimatedTimeText">0.00 hr</string>
     <string name="timeElapsedTitle">Time Elapsed</string>
     <string name="textHint">Click on the marker for more details</string>
+    <string name="feedTest">FeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeedFeed</string>
 
+    <string-array name="difficulty">
+        <item>Easy</item>
+        <item>Moderate</item>
+        <item>Hard</item>
+        <item>Extreme</item>
+        <item>Impossible</item>
+    </string-array>
 
+    <string-array name="filterOption">
+        <item>Name</item>
+        <item>Rating</item>
+        <item>Difficulty</item>
+        <item>Length</item>
+        <item>Estimated Time</item>
+    </string-array>
+
+    <string name="shareHike"><u>Share Hike 📄</u></string>
 </resources>
+

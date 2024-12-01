@@ -6,4 +6,5 @@
     <dimen name="button_spacing_y_map">10dp</dimen>
 
     <dimen name="button_spacing_x_map">10dp</dimen>
+    <dimen name="button_filter_size">50dp</dimen>
 </resources>

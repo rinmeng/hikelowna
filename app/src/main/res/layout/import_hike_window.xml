@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
+
+
+    <TextView
+        android:id="@+id/importText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Import Shared Hike"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/importText2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:gravity="center"
+        android:text="Your friend should have shared a code with you. Paste it below to import their hike stats."
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/importText" />
+
+    <EditText
+        android:id="@+id/codeInput"
+        android:layout_width="300dp"
+        android:layout_height="57dp"
+        android:ems="10"
+        android:fontFamily="@font/nexalight"
+        android:hint="Paste a hikelowna hike code..."
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/importText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/importText"
+        app:layout_constraintTop_toBottomOf="@+id/importText2" />
+
+    <Button
+        android:id="@+id/importButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="36dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Import →"
+        app:layout_constraintEnd_toEndOf="@+id/codeInput"
+        app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nexaheavy"
+        android:text="← Cancel"
+        app:layout_constraintStart_toStartOf="@+id/codeInput"
+        app:layout_constraintTop_toBottomOf="@+id/codeInput" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:background="@color/silver"
+    android:padding="15dp">
+
+    <!--  a banner to seperate the last feed from this one-->
+
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="Poster/User"
+        android:textColor="@color/darkslategrey"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seperator2" />
+
+    <TextView
+        android:id="@+id/userDetailsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="Poster Details"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/trailName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="15dp"
+        android:text="Apex Trail - East"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userTrailInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="15dp"
+        android:text="★ 5 | Time Elapsed: 00:00:00 | "
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/userDetailsText"
+        app:layout_constraintTop_toBottomOf="@+id/userDetailsText" />
+
+    <TextView
+        android:id="@+id/trailDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="★ 4.5 | ⬥⬥⬥⬦⬦ | 2.34km | 1.5mins"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trailName" />
+
+    <TextView
+        android:id="@+id/seperator2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="-"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trailDetails" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="Feed TitleFeed TitleFeed TitleFeed TitleFeed TitleFeed Title"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/userTrailInfoText"
+        app:layout_constraintTop_toBottomOf="@+id/seperator" />
+
+    <TextView
+        android:id="@+id/seperator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:paddingHorizontal="20dp"
+        android:text="-"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userTrailInfoText" />
+
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexalight"
+        android:paddingHorizontal="20dp"
+        android:text="Feed Description Feed Description Feed Description Feed Description Feed Description"
+        android:textAlignment="textStart"
+        android:textColor="@color/darkslategrey"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/titleText"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <Button
+        android:id="@+id/shareHikeButton"
+        android:layout_width="75dp"
+        android:layout_height="25dp"
+        android:layout_margin="0dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/nexaheavy"
+        android:padding="0dp"
+        android:text="@string/shareHike"
+        android:textColor="@color/linkcolor"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
