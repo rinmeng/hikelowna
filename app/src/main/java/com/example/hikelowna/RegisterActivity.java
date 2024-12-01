@@ -46,19 +46,22 @@ public class RegisterActivity extends AppCompatActivity {
         preferredDifficultyLevel.setAdapter(adapter);
 
         registerButton.setOnClickListener(v -> {
-            // Register the user
-            // If the user is registered successfully, go to the main activity
+            String usernameText = username.getText().toString();
+            String passwordText = password.getText().toString();
+            String locationText = location.getText().toString();
+            String displayNameText = displayName.getText().toString();
 
-            User user = new User(username.getText().toString(), password.getText().toString(),
-                    displayName.getText().toString(), location.getText().toString(),
-                    preferredDifficultyLevel.getSelectedItem().toString());
-            UserManager.getInstance().setCurrentUser(user);
+            if (isValidInput(usernameText, displayNameText, locationText)) {
+                User user = new User(usernameText, passwordText, displayNameText, locationText,
+                        preferredDifficultyLevel.getSelectedItem().toString());
+                UserManager.getInstance().setCurrentUser(user);
 
-            it.putExtra("user", user);
+                it.putExtra("user", user);
 
-            FirebaseDatabase.getInstance().getReference("users").child(user.getUsername()).setValue(user);
-            Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
-            finish();
+                FirebaseDatabase.getInstance().getReference("users").child(user.getUsername()).setValue(user);
+                Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         });
 
         backButton.setOnClickListener(v -> {
@@ -71,5 +74,33 @@ public class RegisterActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private boolean isValidInput(String username, String displayName, String location) {
+        String usernamePattern = "^[a-zA-Z0-9]+$";
+        String displayNamePattern = "^[a-zA-Z ]+$";
+        String locationPattern = "^[a-zA-Z0-9 ]+$";
+
+        if (username.isEmpty() || displayName.isEmpty() || location.isEmpty()) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!username.matches(usernamePattern)) {
+            Toast.makeText(this, "Invalid username format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!displayName.matches(displayNamePattern)) {
+            Toast.makeText(this, "Invalid display name format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!location.matches(locationPattern)) {
+            Toast.makeText(this, "Invalid location format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

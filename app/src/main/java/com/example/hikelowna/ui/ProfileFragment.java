@@ -40,7 +40,7 @@ import java.util.Locale;
  */
 public class ProfileFragment extends Fragment {
     TextView username;
-    EditText displayName, location;
+    EditText displayName, location, password;
     Button editButton, logoutButton;
     Spinner preferredDifficulty;
 
@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
 
         username = rootView.findViewById(R.id.username);
         displayName = rootView.findViewById(R.id.displayName);
+        password = rootView.findViewById(R.id.password);
         location = rootView.findViewById(R.id.location);
 
         editButton = rootView.findViewById(R.id.editButton);
@@ -89,6 +90,7 @@ public class ProfileFragment extends Fragment {
         // Set the text fields to the user's information
         String usernameText = "@" + user.getUsername();
         username.setText(usernameText);
+        password.setText(user.getPasswordHash());
         displayName.setText(user.getDisplayName());
         location.setText(user.getLocation());
 
@@ -168,33 +170,44 @@ public class ProfileFragment extends Fragment {
                 editButton.setText(editButtonText);
                 displayName.setEnabled(true);
                 location.setEnabled(true);
+                password.setEnabled(true);
                 preferredDifficulty.setEnabled(true);
                 isEditing = false;
             } else {
                 // Save the changes
-                String editButtonText = "Edit";
-                editButton.setText(editButtonText);
+                // Get the input values
+                String displayNameText = displayName.getText().toString();
+                String locationText = location.getText().toString();
+                String passwordText = password.getText().toString();
 
-                // Disable the text fields
-                displayName.setEnabled(false);
-                location.setEnabled(false);
-                preferredDifficulty.setEnabled(false);
+                // Validate the inputs
+                if (isValidInput(displayNameText, locationText)) {
+                    // Disable the text fields
+                    displayName.setEnabled(false);
+                    location.setEnabled(false);
+                    preferredDifficulty.setEnabled(false);
+                    password.setEnabled(false);
 
-                // Update the user's information
-                user.setDisplayName(displayName.getText().toString());
-                user.setLocation(location.getText().toString());
-                user.setPreferredDifficultyLevel(preferredDifficulty.getSelectedItem().toString());
-                userManager.updateUser(user);
-                try {
-                    usersRef.child(user.getUsername()).setValue(user);
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    // Update the user's information
+                    user.setDisplayName(displayNameText);
+                    user.setLocation(locationText);
+                    user.setPasswordHash(passwordText);
+                    user.setPreferredDifficultyLevel(preferredDifficulty.getSelectedItem().toString());
+                    userManager.updateUser(user);
+                    try {
+                        usersRef.child(user.getUsername()).setValue(user);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+                    isEditing = true;
+
+                    DataFetcher df = new DataFetcher();
+                    df.refetchAllData(user);
+                    String editButtonText = "Edit";
+                    editButton.setText(editButtonText);
                 }
-                Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
-                isEditing = true;
-
-                DataFetcher df = new DataFetcher();
-                df.refetchAllData(user);
             }
         });
 
@@ -226,6 +239,33 @@ public class ProfileFragment extends Fragment {
         UserManager userManager = UserManager.getInstance();
         User user = userManager.getCurrentUser();
         df.refetchAllData(user);
+    }
+
+    private boolean isValidInput(String displayName, String location) {
+        String displayNamePattern = "^[a-zA-Z ]+$";
+        String locationPattern = "^[a-zA-Z0-9 ]+$";
+
+        if (displayName.isEmpty()) {
+            Toast.makeText(getContext(), "Display name cannot be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (location.isEmpty()) {
+            Toast.makeText(getContext(), "Location cannot be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!displayName.matches(displayNamePattern)) {
+            Toast.makeText(getContext(), "Invalid display name format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!location.matches(locationPattern)) {
+            Toast.makeText(getContext(), "Invalid location format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
 

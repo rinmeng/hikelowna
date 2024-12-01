@@ -8,10 +8,21 @@
     tools:context=".ui.ProfileFragment">
 
     <!-- Banner View -->
+
+    <TextView
+        android:id="@+id/passwordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nexaheavy"
+        android:text="Password"
+        app:layout_constraintStart_toStartOf="@+id/usernameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
     <View
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+
         android:background="@drawable/gradient_top_fade_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,11 +53,27 @@
         android:layout_height="wrap_content"
         android:enabled="false"
         android:fontFamily="@font/nexalight"
+        android:maxLength="50"
         android:text="Display Name"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/userDisplayNameTextView" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:fontFamily="@font/nexalight"
+        android:inputType="textPassword"
+        android:maxLength="50"
+        android:text="Password"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
     <TextView
         android:id="@+id/username"
@@ -69,7 +96,8 @@
         android:fontFamily="@font/nexalight"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/location"
         app:layout_constraintTop_toBottomOf="@+id/preferredDiffucultyTextView" />
 
     <EditText
@@ -82,7 +110,8 @@
         android:text="Location"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/displayName"
         app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
     <Button
@@ -116,18 +145,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Display Name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
+        android:id="@+id/limitText5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/nexalight"
+        android:maxLength="20"
+        android:text="(max 50)"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/userDisplayNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/userDisplayNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/userDisplayNameTextView"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Username"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,22 +189,34 @@
         android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Location"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/userDisplayNameTextView"
         app:layout_constraintTop_toBottomOf="@+id/displayName" />
+
+    <TextView
+        android:id="@+id/limitText7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:fontFamily="@font/nexalight"
+        android:maxLength="20"
+        android:text="(max 20)"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/locationTextView"
+        app:layout_constraintStart_toEndOf="@+id/locationTextView"
+        app:layout_constraintTop_toTopOf="@+id/locationTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <TextView
         android:id="@+id/preferredDiffucultyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
         android:fontFamily="@font/nexaheavy"
         android:text="Preferred Difficulty"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/locationTextView"
         app:layout_constraintTop_toBottomOf="@+id/location" />
-
 
     <ScrollView
         android:id="@+id/scrollView4"
