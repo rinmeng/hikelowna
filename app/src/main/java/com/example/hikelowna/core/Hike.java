@@ -22,6 +22,17 @@ public class Hike implements Serializable {
         this.hikeDescription = hikeDescription;
     }
 
+    public Hike(String hikeName, String hikeDescription, String elapsedTime, String trailName, int trailDifficultyStars, int trailRating, float trailLength, float trailEstimatedTime) {
+        this.hikeName = hikeName;
+        this.hikeDescription = hikeDescription;
+        this.elapsedTime = elapsedTime;
+        this.trailName = trailName;
+        this.trailDifficultyStars = trailDifficultyStars;
+        this.trailRating = trailRating;
+        this.trailLength = trailLength;
+        this.trailEstimatedTime = trailEstimatedTime;
+    }
+
     public float getTrailEstimatedTime() {
         return trailEstimatedTime;
     }

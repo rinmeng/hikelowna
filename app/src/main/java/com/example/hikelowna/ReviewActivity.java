@@ -55,8 +55,8 @@ public class ReviewActivity extends AppCompatActivity {
 
         trailNameText.setText(trialName);
         String trailDetails = TrailDifficulty.toStars(trailDifficulty)
-                + " | " + trailLength + " km | \n" + trailEstimatedTime
-                + " minutes" + " | " + elapsedTime;
+                + " | " + trailLength + " km | \nEst. time: " + trailEstimatedTime
+                + " mins" + " |\nTime Elapsed: " + elapsedTime;
         trailDecscriptionText.setText(trailDetails);
 
         // get the inputs

@@ -1122,7 +1122,7 @@ public class Trail implements Comparable<Trail>, Serializable {
 
     // Method to generate rating stars
     public String getRatingStars() {
-        return "★ " + this.rating;
+        return "★ " + String.format("%.1f", rating);
     }
 
     // Shortened toString for list view

@@ -39,11 +39,11 @@ android {
 dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.material.v120)
     implementation(libs.gson)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.database)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

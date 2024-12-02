@@ -30,6 +30,7 @@ import com.example.hikelowna.HikeActivity;
 import com.example.hikelowna.R;
 import com.example.hikelowna.core.Feed;
 import com.example.hikelowna.core.Hike;
+import com.example.hikelowna.core.HikeData;
 import com.example.hikelowna.core.Trail;
 import com.example.hikelowna.core.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -262,14 +263,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Handle marker click events
         map.setOnMarkerClickListener(marker -> {
+            // Find the corresponding trail based on the marker's title
+            for (Trail trail : trails) {
+                if (trail.getName().equals(marker.getTitle())) {
+                    currentSelectedTrail = trail;
+                    displayTrailPolyline(Trail.points(trail));
+                    break;
+                }
+            }
+
             // Move camera to the clicked marker with a zoom level for search results
             moveCameraTo(marker.getPosition(), searchZoom);
             showMarkerPopup(marker, currentSelectedTrail); // Show a popup dialog with marker details
             marker.showInfoWindow(); // Show the marker's info window
-            // Show the trail points
 
             return true; // Consume the event to prevent default behavior
         });
+
+        // Add markers for all trails
+        addMarkersForAllTrails();
     }
 
     private void displayTrailPolyline(List<LatLng> points) {
@@ -318,6 +330,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             View reviewsContainer = inflater.inflate(R.layout.reviews_container, null);
             Button btnBack = reviewsContainer.findViewById(R.id.btnBack);
 
+
             // Fetch and populate the reviews
             fetchFeedsFromDatabase(reviewsContainer);
 
@@ -326,6 +339,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             AlertDialog.Builder reviewsBuilder = new AlertDialog.Builder(requireContext());
             AlertDialog reviewsDialog = reviewsBuilder.setView(reviewsContainer).create();
             reviewsDialog.show();
+
 
             // Set the back button click listener
             btnBack.setOnClickListener(view -> reviewsDialog.dismiss());
@@ -361,6 +375,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Show the dialog
         dialog.show();
+    }
+
+    private void addMarkersForAllTrails() {
+        for (Trail trail : trails) {
+            LatLng trailLatLng = trail.getLatLng();
+            if (trailLatLng != null) {
+                Marker marker = map.addMarker(new MarkerOptions()
+                        .position(trailLatLng)
+                        .title(trail.getName())
+                        .snippet(trail.toStringShort()));
+
+            }
+        }
     }
 
     @Override
@@ -399,7 +426,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Use CharSequence adapter for the spinner
             filterAdapter = ArrayAdapter.createFromResource(requireContext(),
                     R.array.filterOption, R.layout.spinner_item);
-            filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            filterAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             filterSpinner.setAdapter(filterAdapter);
 
             // Set the current filter as the default selected item in the spinner
@@ -424,7 +451,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 trails = filterListBy(selectedFilter, isAscending, trails);
 
                 // Update the adapter for suggestionsListView
-                adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
+                adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, trails);
+                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                 suggestionsListView.setAdapter(adapter);
 
                 Log.d("Filter", "Selected filter: " + selectedFilter + ", isAscending: " + isAscending);
@@ -568,6 +596,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
 
+
         trails.sort(Comparator.comparing(Trail::getName, String::compareToIgnoreCase));
         // print the trails
         for (Trail t : trails) {
@@ -579,8 +608,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         currentSelectedTrail = null;
         currentMarker = null;
-        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, trails);
+        adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item, trails);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         suggestionsListView.setAdapter(adapter);
+
 
     }
 
@@ -597,8 +628,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         feeds.add(feed);
                         Log.d("Feed", feed.toString());
                     }
+
                 }
                 populateFeeds(rootView, feeds);
+
             }
         });
     }
@@ -629,6 +662,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 TextView trailDetails = feedView.findViewById(R.id.trailDetails);
                 TextView titleText = feedView.findViewById(R.id.titleText);
                 TextView descriptionText = feedView.findViewById(R.id.descriptionText);
+                Button shareHikeButton = feedView.findViewById(R.id.shareHikeButton);
+
 
                 Hike feedHike = feed.getHike();
                 User feedPoster = feed.getPoster();
@@ -642,6 +677,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 descriptionText.setText(feedHike.getHikeDescription());
                 trailName.setVisibility(View.GONE);
                 trailDetails.setVisibility(View.GONE);
+
+                shareHikeButton.setOnClickListener(view -> {
+                    // Create a share code for the selected trail
+                    HikeData hd = new HikeData();
+                    String hikeCode = hd.createFeedCode(feed);
+                    HikeData.copyShareCodeToClipboard(requireContext(), hikeCode);
+                    Toast.makeText(requireContext(), "Hike code copied to clipboard", Toast.LENGTH_SHORT).show();
+                });
 
                 feedContainer.addView(feedView);
             }

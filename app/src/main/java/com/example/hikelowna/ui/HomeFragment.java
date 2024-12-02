@@ -91,9 +91,75 @@ public class HomeFragment extends Fragment {
             Hike sharedHike = hd.translateHikeCodeToHike(code);
             showHikeDialog(sharedHike, null, null);
         } catch (Exception e) {
-            showHikeDialog(null, "Invalid Hike Code!", "Please enter a valid hike code.");
+            // then it may be a feed code
+            HikeData hd = new HikeData();
+            try {
+                Feed sharedFeed = hd.translateFeedCodeToFeed(code);
+                showFeedDialog(sharedFeed, null, null);
+            } catch (Exception e1) {
+                showHikeDialog(null, "Invalid code", "The code you entered is invalid.");
+                Log.e("HomeFragment", "Invalid code", e1);
+            }
+
         }
     }
+
+    private void showFeedDialog(Feed sharedFeed, String errorMessage, String errorDescription) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        View sharedFeedView = getLayoutInflater().inflate(R.layout.feed_item, null);
+        builder1.setView(sharedFeedView);
+        AlertDialog dialog1 = builder1.create();
+
+        TextView usernameTextHike = sharedFeedView.findViewById(R.id.username);
+        TextView userDetailsText = sharedFeedView.findViewById(R.id.userDetailsText);
+        TextView trailName = sharedFeedView.findViewById(R.id.trailName);
+        TextView userTrailInfoText = sharedFeedView.findViewById(R.id.userTrailInfoText);
+        TextView trailDetails = sharedFeedView.findViewById(R.id.trailDetails);
+        TextView titleText = sharedFeedView.findViewById(R.id.titleText);
+        TextView descriptionText = sharedFeedView.findViewById(R.id.descriptionText);
+        Button shareHikeButton = sharedFeedView.findViewById(R.id.shareHikeButton);
+        TextView separator2 = sharedFeedView.findViewById(R.id.seperator2);
+        TextView separator = sharedFeedView.findViewById(R.id.seperator);
+
+        Hike sharedHike = sharedFeed.getHike();
+        User sharedPoster = sharedFeed.getPoster();
+
+        if (sharedHike != null) {
+            usernameTextHike.setText(sharedPoster.getDisplayName());
+            userDetailsText.setText(sharedPoster.getLocation());
+            String userTrailInfo = "★ " + sharedHike.getTrailRating() + " | " + "Time Elapsed: " + sharedHike.getElapsedTime();
+            userTrailInfoText.setText(userTrailInfo);
+            titleText.setText(sharedHike.getHikeName());
+            descriptionText.setText(sharedHike.getHikeDescription());
+            trailName.setText(sharedHike.getTrailName());
+            getAverageRatingForTrail(sharedHike.getTrailName(), averageRating -> {
+                String trailDetailsText = String.format(Locale.getDefault(), "★ %.2f | %s | %.1f km | %s mins",
+                        averageRating,
+                        TrailDifficulty.toStars(sharedHike.getTrailDifficultyStars()),
+                        sharedHike.getTrailLength(),
+                        sharedHike.getTrailEstimatedTime());
+                trailDetails.setText(trailDetailsText);
+            });
+        } else {
+            usernameTextHike.setText(errorMessage);
+            userDetailsText.setText(errorDescription);
+            separator.setVisibility(View.GONE);
+            separator2.setVisibility(View.GONE);
+            trailName.setVisibility(View.GONE);
+            userTrailInfoText.setVisibility(View.GONE);
+            trailDetails.setVisibility(View.GONE);
+            titleText.setVisibility(View.GONE);
+            descriptionText.setVisibility(View.GONE);
+        }
+
+        shareHikeButton.setText("Back");
+        shareHikeButton.setTextSize(15);
+        shareHikeButton.setBackgroundResource(0);
+        shareHikeButton.setOnClickListener(v3 -> dialog1.dismiss());
+
+        dialog1.show();
+    }
+
 
     private void showHikeDialog(Hike sharedHike, String errorMessage, String errorDescription) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
@@ -161,8 +227,6 @@ public class HomeFragment extends Fragment {
                         Log.d("Feed", feed.toString());
                     }
                 }
-
-
                 populateFeeds(rootView, feeds);
             }
         });
@@ -224,7 +288,7 @@ public class HomeFragment extends Fragment {
 
             feedShareHikeButton.setOnClickListener(v -> {
                 HikeData hd = new HikeData();
-                String sharedHikeCode = hd.createHikeCode(feed.getHike());
+                String sharedHikeCode = hd.createFeedCode(feed);
                 HikeData.copyShareCodeToClipboard(getContext(), sharedHikeCode);
                 Toast.makeText(getContext(), "Hike code copied to clipboard!", Toast.LENGTH_SHORT).show();
             });

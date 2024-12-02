@@ -1,12 +1,13 @@
 package com.example.hikelowna.core;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.util.Base64;
-import java.util.Arrays;
+import android.util.Log;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class HikeData {
 
@@ -36,7 +37,7 @@ public class HikeData {
     }
 
     // Combines all string fields of a Feed object (Hike + User) into a single string
-    public String translateHikeCode(Feed feed) {
+    public String translateFeedCode(Feed feed) {
         Hike hike = feed.getHike();
         User poster = feed.getPoster();
 
@@ -53,9 +54,9 @@ public class HikeData {
         return encrypt(combinedData);
     }
 
-    // Encrypts the combined string of Feed data using AES
-    public String createHikeCode(Feed feed) {
-        String combinedData = translateHikeCode(feed);
+    public String createFeedCode(Feed feed) {
+        String combinedData = translateFeedCode(feed);
+        Log.d("HikeData", "createFeedCode: " + combinedData);
         return encrypt(combinedData);
     }
 
@@ -116,37 +117,32 @@ public class HikeData {
         return hike;
     }
 
-    /**
-     * Translates an encrypted feed code back into a Feed object.
-     *
-     * @param encryptedFeedCode the encrypted feed string
-     * @return the reconstructed Feed object
-     */
-    public Feed translateHikeCodeToFeed(String encryptedFeedCode) {
+    public Feed translateFeedCodeToFeed(String encryptedFeedCode) {
         String decryptedData = decrypt(encryptedFeedCode);
-        assert decryptedData != null;
         String[] fields = decryptedData.split("\\|");
 
-        if (fields.length != 13) { // 8 fields for Hike + 5 fields for User
-            throw new IllegalArgumentException("Invalid feed code. Expected 13 fields but got " + fields.length);
+        if (fields.length != 12) {
+            throw new IllegalArgumentException("Invalid feed code. Expected 12 fields but got " + fields.length);
         }
 
-        // Reconstruct Hike
-        Hike hike = translateHikeCodeToHike(String.join("|", Arrays.copyOfRange(fields, 0, 8)));
+        Hike hike = new Hike();
+        hike.setHikeDescription(fields[0]);
+        hike.setHikeName(fields[1]);
+        hike.setElapsedTime(fields[2]);
+        hike.setTrailName(fields[3]);
+        hike.setTrailDifficultyStars(Integer.parseInt(fields[4]));
+        hike.setTrailRating(Integer.parseInt(fields[5]));
+        hike.setTrailLength(Float.parseFloat(fields[6]));
+        hike.setTrailEstimatedTime(Float.parseFloat(fields[7]));
 
-        // Reconstruct User
         User poster = new User();
         poster.setUsername(fields[8]);
         poster.setDisplayName(fields[9]);
         poster.setLocation(fields[10]);
         poster.setPreferredDifficultyLevel(fields[11]);
-        // Assuming passwordHash is not included for security reasons
 
-        // Reconstruct Feed
-        Feed feed = new Feed();
-        feed.setHike(hike);
-        feed.setPoster(poster);
-
-        return feed;
+        return new Feed(hike, poster);
     }
+
+
 }
